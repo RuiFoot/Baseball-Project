@@ -1,0 +1,5 @@
+rootProject.name = 'Baseball-Project'
+include 'common'
+include 'domain'
+include 'infrastructure'
+include 'api'
