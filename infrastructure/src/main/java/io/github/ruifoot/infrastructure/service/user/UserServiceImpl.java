@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.service.user;
 
 
-import io.github.ruifoot.domain.user.service.UserService;
+import io.github.ruifoot.domain.service.users.UserService;
 
 public class UserServiceImpl implements UserService {
     // UserServiceImpl 클래스는 UserService 인터페이스를 구현합니다.

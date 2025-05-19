@@ -26,6 +26,7 @@ dependencies {
 	// DB, JPA, Redis 등 구현 관련 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
