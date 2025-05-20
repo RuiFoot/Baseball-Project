@@ -21,13 +21,19 @@ public enum ResponseCode {
     //-----------------------------------------------------------------------
 
     // 400 BAD_REQUEST
-    INVALID_PARAMETER(400, "Invalid parameter"),
-    INVALID_REQUEST(400, "Invalid request"),
-    INVALID_REQUEST_BODY(400, "Invalid request body"),
-    INVALID_REQUEST_HEADER(400, "Invalid request header"),
-    INVALID_REQUEST_PATH(400, "Invalid request path"),
-    INVALID_REQUEST_QUERY(400, "Invalid request query"),
+
+    INVALID_PARAMETER(400, "잘못된 파라미터입니다."),
+    INVALID_REQUEST(400, "잘못된 요청입니다."),
+    INVALID_REQUEST_BODY(400, "요청 본문이 올바르지 않습니다."),
+    INVALID_REQUEST_HEADER(400, "요청 헤더가 올바르지 않습니다."),
+    INVALID_REQUEST_PATH(400, "요청 경로가 올바르지 않습니다."),
+    INVALID_REQUEST_QUERY(400, "요청 쿼리 파라미터가 올바르지 않습니다."),
     INVALID_PASSWORD(400, "비밀번호가 올바르지 않습니다."),
+
+    VALIDATION_ERROR(400, "입력값이 유효하지 않습니다."),
+
+    // JSON 파싱 에러 전용 코드 추가
+    JSON_PARSE_ERROR(400, "요청 JSON 형식이 올바르지 않습니다."),
 
     UNAUTHORIZED(401, "인증 정보가 유효하지 않습니다."),
 
