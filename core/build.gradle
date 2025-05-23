@@ -10,17 +10,13 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+dependencies {
+    implementation project(':domain')
+    implementation project(':infrastructure')
+}
 
 repositories {
     mavenCentral()
-}
-
-dependencies {
-    implementation project(':common')
-}
-
-jar {
-    enabled = true
 }
 
 tasks.named('test') {

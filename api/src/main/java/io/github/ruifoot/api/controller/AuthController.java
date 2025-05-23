@@ -6,19 +6,23 @@ import io.github.ruifoot.api.dto.auth.request.SignupRequest;
 import io.github.ruifoot.common.dto.CommonResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.common.util.ApiResponseUtil;
+import io.github.ruifoot.domain.service.users.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController(value = "auth")
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
-
+    private final UserService userService;
 
     @GetMapping("/me")
     public ResponseEntity<CommonResponseDto<?>> me() {
-        return ApiResponseUtil.success(ResponseCode.SUCCESS);
+        String username = userService.getUsername(1L);
+        return ApiResponseUtil.success(ResponseCode.SUCCESS,username);
     }
 
     @PostMapping("/login")
