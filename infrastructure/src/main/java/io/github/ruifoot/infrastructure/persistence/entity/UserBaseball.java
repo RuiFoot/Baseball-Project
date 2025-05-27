@@ -1,15 +1,11 @@
 package io.github.ruifoot.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -17,7 +13,7 @@ import java.time.OffsetDateTime;
 @Table(name = "user_baseball")
 public class UserBaseball extends BaseTimeEntity {
     @Id
-    @ColumnDefault("nextval('user_baseball_id_seq')")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "user_positions")
 public class UserPosition {
     @Id
-    @ColumnDefault("nextval('user_positions_id_seq')")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
