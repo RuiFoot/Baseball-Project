@@ -13,7 +13,7 @@ public class Users extends BaseTimeDomain {
   private String email;
   private String passwordHash;
   private String role;
-
+  private boolean adminApproved;
 
 
 }

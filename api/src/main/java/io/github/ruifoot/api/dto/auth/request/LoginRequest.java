@@ -1,7 +1,10 @@
 package io.github.ruifoot.api.dto.auth.request;
 
+import jakarta.validation.constraints.Email;
+
 public record LoginRequest(
-        String username,
+        @Email
+        String email,
         String password
 ) {
 }

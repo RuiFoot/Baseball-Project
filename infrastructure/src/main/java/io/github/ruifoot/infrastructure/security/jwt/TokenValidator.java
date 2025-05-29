@@ -1,11 +1,22 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
+import io.github.ruifoot.infrastructure.persistence.entity.User;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenValidator {
@@ -17,16 +28,27 @@ public class TokenValidator {
             return null;
         }
 
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        Claims claims = jwtTokenProvider.parseClaims(token);
 
-        // 실제 사용 시에는 UserDetailsService 등에서 User 객체를 불러오지만
-        // 여기서는 간단히 principal 에 userId 만 세팅
-        return new UsernamePasswordAuthenticationToken(userId, null, null);
+        // Log extracted claims for debugging
+        log.info("Claims: {}", claims);
+
+        if (claims.get("authorities") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+        // 클레임에서 권한 정보 가져오기
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("authorities").toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
+    // Request Header에서 토큰 정보 추출
     public String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer")) {
             return bearer.substring(7);
         }
         return null;

@@ -1,15 +1,20 @@
 package io.github.ruifoot.infrastructure.test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Base test class that all test classes should extend to get consistent logging.
- * This class applies the TestLoggerExtension to log test execution details.
- * It also uses Lombok's @Slf4j annotation to provide a logger instance.
+ * 일관된 로깅을 위해 모든 테스트 클래스가 확장해야 하는 기본 테스트 클래스.
+ * 이 클래스는 테스트 실행 세부 정보를 기록하기 위해 TestLoggerExtension을 적용합니다.
+ * 또한 테스트 실패 시 한글 오류 메시지를 제공하기 위해 KoreanAssertionMessageExtension을 적용합니다.
+ * 로거 인스턴스를 제공하기 위해 Lombok의 @Slf4j 어노테이션을 사용합니다.
  */
 @Slf4j
-@ExtendWith(TestLoggerExtension.class)
+@Extensions({
+    @ExtendWith(TestLoggerExtension.class),
+    @ExtendWith(KoreanAssertionMessageExtension.class)
+})
 public abstract class BaseTest {
-    // No implementation needed - the annotations do all the work
+    // 구현이 필요 없음 - 어노테이션이 모든 작업을 수행
 }
