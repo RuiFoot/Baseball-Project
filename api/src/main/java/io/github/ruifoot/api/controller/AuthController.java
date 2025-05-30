@@ -16,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * 인증, 인가를 위한 컨트롤러
+ * 로그인, 회원가입, 토큰 발급/갱신, 인증 관련 기능
+ */
 @RestController(value = "auth")
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -72,4 +77,12 @@ public class AuthController {
             return ApiResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
         }
     }
+
+    /*
+    TODO[AuthController]: 비밀번호 재설정 기능 필요
+     */
+
+    /*
+    TODO[AuthController]: 소셜 로그인 사용시 기능 추가 필요
+     */
 }

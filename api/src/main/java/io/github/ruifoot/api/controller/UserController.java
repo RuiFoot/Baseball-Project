@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * 유저 관련 기능을 위한 컨트롤러
+ * 사용자 프로필 조회, 개인정보 수정 등 활용 예정
+ */
 @RestController(value = "user")
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -26,5 +31,8 @@ public class UserController {
         return ApiResponseUtil.success(ResponseCode.SUCCESS,username);
     }
 
+    /*
+    TODO[UserController]: 사용자 프로필 조회, 개인정보 수정
+     */
 
 }
