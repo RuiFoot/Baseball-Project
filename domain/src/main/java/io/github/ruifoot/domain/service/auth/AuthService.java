@@ -16,7 +16,7 @@ public interface AuthService {
     Users register(String username, String email, String password);
 
     /**
-     * Login a user
+     * Log in a user
      * @param email Email
      * @param password Password (plain text)
      * @return TokenInfo containing access and refresh tokens
@@ -31,7 +31,8 @@ public interface AuthService {
     JwtToken refreshToken(String refreshToken);
 
     /**
-     * Logout a user by invalidating their refresh token
+     * Log out a user by invalidating their refresh token
+     *
      * @param refreshToken Refresh token to invalidate
      */
     boolean logout(String refreshToken);

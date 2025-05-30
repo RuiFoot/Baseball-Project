@@ -51,6 +51,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     public User(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
         super();
+        this.username = subject;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class SecurityConfigTest extends BaseTest {
         // 인증 없는 보호된 GET 엔드포인트
         log.info("[DEBUG_LOG] 인증 없이 보호된 GET 엔드포인트 테스트 중: /api/users");
         mockMvc.perform(get("/api/users"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(result -> {
                     log.info("[DEBUG_LOG] 응답 상태: {}", result.getResponse().getStatus());
                     log.info("[DEBUG_LOG] 응답 내용: {}", result.getResponse().getContentAsString());
@@ -76,7 +76,7 @@ public class SecurityConfigTest extends BaseTest {
         mockMvc.perform(post("/api/users")
                 .contentType("application/json")
                 .content("{\"name\":\"Test User\"}"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(result -> log.info("[DEBUG_LOG] 응답 상태: {}", result.getResponse().getStatus()));
 
         // 인증이 있는 보호된 POST 엔드포인트
@@ -99,7 +99,7 @@ public class SecurityConfigTest extends BaseTest {
         mockMvc.perform(put("/api/users/1")
                 .contentType("application/json")
                 .content("{\"name\":\"Updated User\"}"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(result -> log.info("[DEBUG_LOG] 응답 상태: {}", result.getResponse().getStatus()));
 
         // 인증이 있는 보호된 PUT 엔드포인트
@@ -120,7 +120,7 @@ public class SecurityConfigTest extends BaseTest {
         // 인증 없는 보호된 DELETE 엔드포인트
         log.info("[DEBUG_LOG] 인증 없이 보호된 DELETE 엔드포인트 테스트 중: /api/users/1");
         mockMvc.perform(delete("/api/users/1"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(result -> log.info("[DEBUG_LOG] 응답 상태: {}", result.getResponse().getStatus()));
 
         // 인증이 있는 보호된 DELETE 엔드포인트

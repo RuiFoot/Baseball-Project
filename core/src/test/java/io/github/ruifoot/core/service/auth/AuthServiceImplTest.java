@@ -1,5 +1,7 @@
 package io.github.ruifoot.core.service.auth;
 
+import io.github.ruifoot.common.exception.CustomException;
+import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.core.CoreTestApplication;
 import io.github.ruifoot.core.test.BaseTest;
 import io.github.ruifoot.domain.model.Users;
@@ -31,17 +33,20 @@ public class AuthServiceImplTest extends BaseTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private JwtService jwtService;
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
+    @Mock
+    private RedisService redisService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     private AuthServiceImpl authService;
 
-    private JwtService jwtService;
-    private JwtTokenProvider jwtTokenProvider;
-    private RedisService redisService;
-    private PasswordEncoder passwordEncoder;
-
     @BeforeEach
     void setUp() {
-        authService = new AuthServiceImpl(userRepository, jwtService, jwtTokenProvider,redisService,passwordEncoder);
+        authService = new AuthServiceImpl(userRepository, jwtService, jwtTokenProvider, redisService, passwordEncoder);
     }
 
     @Test
@@ -89,6 +94,7 @@ public class AuthServiceImplTest extends BaseTest {
 
         when(userRepository.existsByUsername(username)).thenReturn(false);
         when(userRepository.existsByEmail(email)).thenReturn(false);
+        when(passwordEncoder.encode(password)).thenReturn("encodedPassword123");
         when(userRepository.save(any(Users.class))).thenAnswer(invocation -> {
             Users savedUser = invocation.getArgument(0);
             savedUser.setId(1L);
@@ -98,6 +104,8 @@ public class AuthServiceImplTest extends BaseTest {
         // 실행
         Users registeredUser = authService.register(username, email, password);
 
+        log.info("[DEBUG_LOG] 등록된 사용자: id={}, 사용자 이름={}, 이메일={}, 비밀번호={}, 권한={}",
+                registeredUser.getId(), registeredUser.getUsername(), registeredUser.getEmail(), registeredUser.getPasswordHash(), registeredUser.getRole());
         // 검증
         assertThat(registeredUser).isNotNull();
         assertThat(registeredUser.getUsername()).isEqualTo(username);
@@ -162,75 +170,160 @@ public class AuthServiceImplTest extends BaseTest {
     }
 
     @Test
-    void login_ReturnsUser_WhenCredentialsAreValid() {
-
+    void login_ReturnsJwtToken_WhenCredentialsAreValid() {
         // 준비
-        String username = "testuser";
+        String email = "testuser@example.com";
         String password = "password123";
-        String hashedPassword = passwordEncoder.encode(password);
 
-        Users user = new Users();
-        user.setId(1L);
-        user.setUsername(username);
-        user.setPasswordHash(hashedPassword);
+        JwtToken expectedToken = JwtToken.builder()
+                .grantType("Bearer")
+                .accessToken("access-token")
+                .refreshToken("refresh-token")
+                .build();
 
-        log.info("[DEBUG_LOG] 사용자 이름으로 로그인 테스트 중: {}", username);
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        log.info("[DEBUG_LOG] 이메일로 로그인 테스트 중: {}", email);
+        when(jwtService.signIn(email, password)).thenReturn(expectedToken);
 
         // 실행
-        JwtToken loggedInUser = authService.login(username, password);
+        JwtToken result = authService.login(email, password);
 
         // 검증
-        assertThat(loggedInUser).isNotNull();
-        log.info("[DEBUG_LOG] 로그인 성공: 토큰={}", loggedInUser.getAccessToken());
+        assertThat(result).isNotNull();
+        assertThat(result.getAccessToken()).isEqualTo("access-token");
+        assertThat(result.getRefreshToken()).isEqualTo("refresh-token");
+        log.info("[DEBUG_LOG] 로그인 성공: 토큰={}", result.getAccessToken());
 
-        verify(userRepository).findByUsername(username);
+        verify(jwtService).signIn(email, password);
     }
 
     @Test
-    void login_ThrowsException_WhenUsernameNotFound() {
+    void login_ThrowsException_WhenCredentialsAreInvalid() {
         // 준비
-        String username = "nonexistentuser";
+        String email = "nonexistentuser@example.com";
         String password = "password123";
-        log.info("[DEBUG_LOG] 존재하지 않는 사용자 이름으로 로그인 테스트 중: {}", username);
+        log.info("[DEBUG_LOG] 잘못된 자격 증명으로 로그인 테스트 중: {}", email);
 
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        RuntimeException mockException = new RuntimeException("Invalid username or password");
+        when(jwtService.signIn(email, password)).thenThrow(mockException);
 
         // 실행 & 검증
         RuntimeException exception = assertThrows(RuntimeException.class, () -> 
-            authService.login(username, password)
+            authService.login(email, password)
         );
 
         assertThat(exception.getMessage()).isEqualTo("Invalid username or password");
         log.info("[DEBUG_LOG] 예상대로 예외 발생: {}", exception.getMessage());
 
-        verify(userRepository).findByUsername(username);
+        verify(jwtService).signIn(email, password);
     }
 
     @Test
-    void login_ThrowsException_WhenPasswordIsInvalid() {
+    void refreshToken_ReturnsNewToken_WhenRefreshTokenIsValid() {
         // 준비
-        String username = "testuser";
-        String correctPassword = "password123";
-        String wrongPassword = "wrongpassword";
-        String hashedPassword = passwordEncoder.encode(correctPassword);
+        String refreshToken = "valid-refresh-token";
 
-        Users user = new Users();
-        user.setId(1L);
-        user.setUsername(username);
-        user.setPasswordHash(hashedPassword);
+        JwtToken expectedToken = JwtToken.builder()
+                .grantType("Bearer")
+                .accessToken("new-access-token")
+                .refreshToken("new-refresh-token")
+                .build();
 
-        log.info("[DEBUG_LOG] 잘못된 비밀번호로 로그인 테스트 중 (사용자: {})", username);
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        log.info("[DEBUG_LOG] 유효한 리프레시 토큰으로 토큰 갱신 테스트 중");
+        when(jwtService.refreshToken(refreshToken)).thenReturn(expectedToken);
+
+        // 실행
+        JwtToken result = authService.refreshToken(refreshToken);
+
+        // 검증
+        assertThat(result).isNotNull();
+        assertThat(result.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(result.getRefreshToken()).isEqualTo("new-refresh-token");
+        log.info("[DEBUG_LOG] 토큰 갱신 성공: 새 토큰={}", result.getAccessToken());
+
+        verify(jwtService).refreshToken(refreshToken);
+    }
+
+    @Test
+    void refreshToken_ThrowsException_WhenRefreshTokenIsInvalid() {
+        // 준비
+        String refreshToken = "invalid-refresh-token";
+        log.info("[DEBUG_LOG] 유효하지 않은 리프레시 토큰으로 토큰 갱신 테스트 중");
+
+        RuntimeException mockException = new RuntimeException("Invalid refresh token");
+        when(jwtService.refreshToken(refreshToken)).thenThrow(mockException);
 
         // 실행 & 검증
         RuntimeException exception = assertThrows(RuntimeException.class, () -> 
-            authService.login(username, wrongPassword)
+            authService.refreshToken(refreshToken)
         );
 
-        assertThat(exception.getMessage()).isEqualTo("Invalid username or password");
+        assertThat(exception.getMessage()).isEqualTo("Invalid refresh token");
         log.info("[DEBUG_LOG] 예상대로 예외 발생: {}", exception.getMessage());
 
-        verify(userRepository).findByUsername(username);
+        verify(jwtService).refreshToken(refreshToken);
+    }
+
+    @Test
+    void logout_ReturnsTrue_WhenRefreshTokenIsValid() {
+        // 준비
+        String refreshToken = "valid-refresh-token";
+        log.info("[DEBUG_LOG] 유효한 리프레시 토큰으로 로그아웃 테스트 중");
+
+        when(jwtTokenProvider.validateToken(refreshToken)).thenReturn(true);
+        when(redisService.hasKey(refreshToken)).thenReturn(true);
+        doNothing().when(redisService).deleteValues(refreshToken);
+
+        // 실행
+        boolean result = authService.logout(refreshToken);
+
+        // 검증
+        assertThat(result).isTrue();
+        log.info("[DEBUG_LOG] 로그아웃 성공");
+
+        verify(jwtTokenProvider).validateToken(refreshToken);
+        verify(redisService).hasKey(refreshToken);
+        verify(redisService).deleteValues(refreshToken);
+    }
+
+    @Test
+    void logout_ReturnsFalse_WhenRefreshTokenNotInRedis() {
+        // 준비
+        String refreshToken = "valid-refresh-token-not-in-redis";
+        log.info("[DEBUG_LOG] Redis에 없는 리프레시 토큰으로 로그아웃 테스트 중");
+
+        when(jwtTokenProvider.validateToken(refreshToken)).thenReturn(true);
+        when(redisService.hasKey(refreshToken)).thenReturn(false);
+
+        // 실행
+        boolean result = authService.logout(refreshToken);
+
+        // 검증
+        assertThat(result).isFalse();
+        log.info("[DEBUG_LOG] 예상대로 로그아웃 실패 (토큰이 Redis에 없음)");
+
+        verify(jwtTokenProvider).validateToken(refreshToken);
+        verify(redisService).hasKey(refreshToken);
+        verify(redisService, never()).deleteValues(refreshToken);
+    }
+
+    @Test
+    void logout_ThrowsException_WhenRefreshTokenIsInvalid() {
+        // 준비
+        String refreshToken = "invalid-refresh-token";
+        log.info("[DEBUG_LOG] 유효하지 않은 리프레시 토큰으로 로그아웃 테스트 중");
+
+        RuntimeException mockException = new CustomException(ResponseCode.INVALID_TOKEN, ResponseCode.INVALID_TOKEN.getMessage());
+        when(jwtTokenProvider.validateToken(refreshToken)).thenThrow(mockException);
+
+        // 실행 & 검증
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> 
+            authService.logout(refreshToken)
+        );
+
+        log.info("[DEBUG_LOG] 예상대로 예외 발생: {}", exception.getMessage());
+
+        verify(jwtTokenProvider).validateToken(refreshToken);
+        verify(redisService, never()).hasKey(refreshToken);
+        verify(redisService, never()).deleteValues(refreshToken);
     }
 }

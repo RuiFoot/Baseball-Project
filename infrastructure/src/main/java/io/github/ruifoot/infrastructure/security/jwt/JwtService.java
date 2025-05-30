@@ -47,7 +47,7 @@ public class JwtService {
                 TimeUnit.MILLISECONDS
         );
 
-        return jwtTokenProvider.generateToken(authentication);
+        return jwtToken;
     }
     public JwtToken refreshToken(String refreshToken){
         if (!jwtTokenProvider.validateToken(refreshToken)) {

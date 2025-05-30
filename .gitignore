@@ -63,3 +63,4 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 /script/
+/infrastructure/src/test/resources/.env

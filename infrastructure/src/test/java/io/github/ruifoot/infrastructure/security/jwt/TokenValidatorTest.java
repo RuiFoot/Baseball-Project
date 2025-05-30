@@ -1,7 +1,9 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
 import io.github.ruifoot.infrastructure.InfrastructureTestApplication;
+import io.github.ruifoot.infrastructure.persistence.entity.User;
 import io.github.ruifoot.infrastructure.test.BaseTest;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -76,8 +78,15 @@ public class TokenValidatorTest extends BaseTest {
         log.info("[DEBUG_LOG] 테스트용 서명 키 생성됨");
 
         when(jwtTokenProvider.validateToken(validToken)).thenReturn(true);
-        when(jwtTokenProvider.getUserIdFromToken(validToken)).thenReturn(userId);
-        when(jwtTokenProvider.getKey()).thenReturn(testKey);
+
+        // Mock the parseClaims method to return valid claims
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(testKey)
+                .build()
+                .parseClaimsJws(validToken)
+                .getBody();
+        when(jwtTokenProvider.parseClaims(validToken)).thenReturn(claims);
+
         log.info("[DEBUG_LOG] JwtTokenProvider.getKey() 메서드가 테스트 키를 반환하도록 설정됨");
         log.info("[DEBUG_LOG] JwtTokenProvider.getKey() : " + testKey);
 
@@ -86,7 +95,9 @@ public class TokenValidatorTest extends BaseTest {
 
         // 검증
         assertThat(authentication).isNotNull();
-        assertThat(authentication.getPrincipal()).isEqualTo(userId);
+        assertThat(authentication.getPrincipal()).isInstanceOf(User.class);
+        User userPrincipal = (User) authentication.getPrincipal();
+        assertThat(userPrincipal.getUsername()).isEqualTo(userId);
         log.info("[DEBUG_LOG] 인증 결과: principal={}, authorities={}", 
                 authentication.getPrincipal(), 
                 authentication.getAuthorities());

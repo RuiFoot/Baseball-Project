@@ -1,18 +1,12 @@
 spring:
   application:
     name: infrastructure-test
-  datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: 
-    driver-class-name: org.h2.Driver
+  # Database configuration is provided by profile-specific files
+  # (application-local-test.yml, application-dev-test.yml, application-prod-test.yml)
   jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   data:
     redis:
       host: localhost
