@@ -3,7 +3,7 @@ package io.github.ruifoot.infrastructure.security.jwt;
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.domain.model.auth.JwtToken;
-import io.github.ruifoot.infrastructure.persistence.entity.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;

@@ -5,7 +5,7 @@ import io.github.ruifoot.api.dto.auth.request.LoginRequest;
 import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
 import io.github.ruifoot.api.dto.auth.request.SignupRequest;
 import io.github.ruifoot.api.test.BaseTest;
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.service.auth.AuthService;
 import io.github.ruifoot.domain.service.users.UserService;

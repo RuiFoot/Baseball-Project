@@ -2,7 +2,7 @@ package io.github.ruifoot.core.service.auth;
 
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.repository.UserRepository;
 import io.github.ruifoot.domain.service.auth.AuthService;

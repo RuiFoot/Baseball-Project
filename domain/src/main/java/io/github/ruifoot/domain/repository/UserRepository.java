@@ -1,6 +1,6 @@
 package io.github.ruifoot.domain.repository;
 
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 
 import java.util.Optional;
 

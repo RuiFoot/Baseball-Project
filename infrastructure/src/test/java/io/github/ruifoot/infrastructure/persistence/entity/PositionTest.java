@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.entity;
 
 import io.github.ruifoot.infrastructure.InfrastructureTestApplication;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.Position;
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCategory;
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCode;
 import io.github.ruifoot.infrastructure.test.BaseTest;

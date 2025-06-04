@@ -1,7 +1,8 @@
 package io.github.ruifoot.infrastructure.persistence.entity;
 
 import io.github.ruifoot.infrastructure.InfrastructureTestApplication;
-import io.github.ruifoot.infrastructure.persistence.repository.UserJpaRepository;
+import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.repository.jpa.UserJpaRepository;
 import io.github.ruifoot.infrastructure.test.BaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

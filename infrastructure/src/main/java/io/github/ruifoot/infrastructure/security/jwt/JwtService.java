@@ -2,12 +2,12 @@ package io.github.ruifoot.infrastructure.security.jwt;
 
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.repository.UserRepository;
 import io.github.ruifoot.infrastructure.cache.redis.RedisService;
-import io.github.ruifoot.infrastructure.persistence.entity.User;
-import io.github.ruifoot.infrastructure.persistence.mapper.UserMapper;
+import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

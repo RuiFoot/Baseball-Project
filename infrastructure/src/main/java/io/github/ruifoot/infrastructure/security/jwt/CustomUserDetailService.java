@@ -1,8 +1,8 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.repository.UserRepository;
-import io.github.ruifoot.infrastructure.persistence.mapper.UserMapper;
+import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

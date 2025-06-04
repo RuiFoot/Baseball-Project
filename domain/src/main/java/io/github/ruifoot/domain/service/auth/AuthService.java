@@ -1,6 +1,6 @@
 package io.github.ruifoot.domain.service.auth;
 
-import io.github.ruifoot.domain.model.Users;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 
 public interface AuthService {

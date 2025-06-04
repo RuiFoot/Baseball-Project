@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
 import io.github.ruifoot.infrastructure.InfrastructureTestApplication;
-import io.github.ruifoot.infrastructure.persistence.entity.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.User;
 import io.github.ruifoot.infrastructure.test.BaseTest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
