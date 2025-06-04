@@ -1,4 +1,4 @@
-package io.github.ruifoot.domain.service.users;
+package io.github.ruifoot.domain.service.user;
 
 public interface UserService {
 

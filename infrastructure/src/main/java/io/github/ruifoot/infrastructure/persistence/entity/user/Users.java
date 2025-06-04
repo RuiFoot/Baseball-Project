@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends BaseTimeEntity implements UserDetails {
+public class Users extends BaseTimeEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -50,7 +50,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private boolean adminApproved = false;
 
 
-    public User(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
+    public Users(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
         super();
         this.username = subject;
     }

@@ -1,9 +1,8 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
-import io.github.ruifoot.domain.model.baseball.Positions;
 import io.github.ruifoot.domain.model.baseball.enums.PositionCategory;
 import io.github.ruifoot.domain.model.baseball.enums.PositionCode;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Position;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.Positions;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +10,15 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between Position entity and Positions domain model.
  */
 @Component
-public class PositionMapper implements EntityMapper<Position, Positions> {
+public class PositionMapper implements EntityMapper<Positions, io.github.ruifoot.domain.model.baseball.Positions> {
 
     @Override
-    public Positions toDomain(Position entity) {
+    public io.github.ruifoot.domain.model.baseball.Positions toDomain(Positions entity) {
         if (entity == null) {
             return null;
         }
 
-        Positions domain = new Positions();
+        io.github.ruifoot.domain.model.baseball.Positions domain = new io.github.ruifoot.domain.model.baseball.Positions();
         domain.setId(entity.getId() != null ? entity.getId() : 0);
 
         // Convert entity enum to domain enum
@@ -35,19 +34,16 @@ public class PositionMapper implements EntityMapper<Position, Positions> {
             domain.setCategory(PositionCategory.valueOf(entity.getCategory().name()));
         }
 
-        domain.setCreatedAt(entity.getCreatedAt());
-        domain.setUpdatedAt(entity.getUpdatedAt());
-
         return domain;
     }
 
     @Override
-    public Position toEntity(Positions domain) {
+    public Positions toEntity(io.github.ruifoot.domain.model.baseball.Positions domain) {
         if (domain == null) {
             return null;
         }
 
-        Position entity = new Position();
+        Positions entity = new Positions();
 
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -71,7 +67,7 @@ public class PositionMapper implements EntityMapper<Position, Positions> {
     }
 
     @Override
-    public Position updateEntityFromDomain(Position entity, Positions domain) {
+    public Positions updateEntityFromDomain(Positions entity, io.github.ruifoot.domain.model.baseball.Positions domain) {
         if (entity == null || domain == null) {
             return entity;
         }

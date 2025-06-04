@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
 import io.github.ruifoot.infrastructure.InfrastructureTestApplication;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import io.github.ruifoot.infrastructure.test.BaseTest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -95,8 +95,8 @@ public class TokenValidatorTest extends BaseTest {
 
         // 검증
         assertThat(authentication).isNotNull();
-        assertThat(authentication.getPrincipal()).isInstanceOf(User.class);
-        User userPrincipal = (User) authentication.getPrincipal();
+        assertThat(authentication.getPrincipal()).isInstanceOf(Users.class);
+        Users userPrincipal = (Users) authentication.getPrincipal();
         assertThat(userPrincipal.getUsername()).isEqualTo(userId);
         log.info("[DEBUG_LOG] 인증 결과: principal={}, authorities={}", 
                 authentication.getPrincipal(), 

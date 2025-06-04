@@ -34,8 +34,8 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
             domain.setNotice(noticeMapper.toDomain(entity.getNotice()));
         }
         
-        if (entity.getUser() != null) {
-            domain.setUser(userMapper.toDomain(entity.getUser()));
+        if (entity.getUsers() != null) {
+            domain.setUser(userMapper.toDomain(entity.getUsers()));
         }
 
         return domain;
@@ -58,7 +58,7 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
         }
         
         if (domain.getUser() != null) {
-            entity.setUser(userMapper.toEntity(domain.getUser()));
+            entity.setUsers(userMapper.toEntity(domain.getUser()));
         }
 
         return entity;
@@ -78,7 +78,7 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
         }
         
         if (domain.getUser() != null) {
-            entity.setUser(userMapper.toEntity(domain.getUser()));
+            entity.setUsers(userMapper.toEntity(domain.getUser()));
         }
 
         return entity;

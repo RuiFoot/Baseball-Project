@@ -3,7 +3,7 @@ package io.github.ruifoot.core.service.user;
 
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.repository.UserRepository;
-import io.github.ruifoot.domain.service.users.UserService;
+import io.github.ruifoot.domain.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

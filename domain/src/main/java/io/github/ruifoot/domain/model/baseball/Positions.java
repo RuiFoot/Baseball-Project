@@ -1,14 +1,11 @@
 package io.github.ruifoot.domain.model.baseball;
 
-import io.github.ruifoot.domain.model.BaseTimeDomain;
 import io.github.ruifoot.domain.model.baseball.enums.PositionCategory;
 import io.github.ruifoot.domain.model.baseball.enums.PositionCode;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class Positions extends BaseTimeDomain {
+public class Positions {
 
   private long id;
   private PositionCode code;

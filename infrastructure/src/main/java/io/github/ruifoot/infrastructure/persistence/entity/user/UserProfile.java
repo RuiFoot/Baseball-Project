@@ -23,7 +23,7 @@ public class UserProfile extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users users;
 
     @Size(max = 100)
     @Column(name = "full_name", length = 100)

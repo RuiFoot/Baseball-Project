@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
 import io.github.ruifoot.domain.model.user.UserPositions;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Position;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.Positions;
 import io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball;
 import io.github.ruifoot.infrastructure.persistence.entity.user.UserPosition;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
@@ -28,8 +28,8 @@ public class UserPositionMapper implements EntityMapper<UserPosition, UserPositi
         }
         
         // Map Position entity to positionId
-        if (entity.getPosition() != null && entity.getPosition().getId() != null) {
-            domain.setPositionId(entity.getPosition().getId());
+        if (entity.getPositions() != null && entity.getPositions().getId() != null) {
+            domain.setPositionId(entity.getPositions().getId());
         }
 
         return domain;
@@ -59,9 +59,9 @@ public class UserPositionMapper implements EntityMapper<UserPosition, UserPositi
         // For Position reference, we only set the ID
         // The actual Position object should be loaded by the repository
         if (domain.getPositionId() > 0) {
-            Position position = new Position();
-            position.setId((int) domain.getPositionId());
-            entity.setPosition(position);
+            Positions positions = new Positions();
+            positions.setId((int) domain.getPositionId());
+            entity.setPositions(positions);
         }
 
         return entity;
@@ -85,10 +85,10 @@ public class UserPositionMapper implements EntityMapper<UserPosition, UserPositi
         
         // For Position reference, we only update if the positionId has changed
         if (domain.getPositionId() > 0 && 
-            (entity.getPosition() == null || entity.getPosition().getId() != domain.getPositionId())) {
-            Position position = new Position();
-            position.setId((int) domain.getPositionId());
-            entity.setPosition(position);
+            (entity.getPositions() == null || entity.getPositions().getId() != domain.getPositionId())) {
+            Positions positions = new Positions();
+            positions.setId((int) domain.getPositionId());
+            entity.setPositions(positions);
         }
 
         return entity;

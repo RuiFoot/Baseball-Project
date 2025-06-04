@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.entity.notice;
 
 import io.github.ruifoot.infrastructure.persistence.entity.BaseTimeEntity;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +26,5 @@ public class NoticeLike extends BaseTimeEntity {
     // 좋아요 누른 사용자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users users;
 }

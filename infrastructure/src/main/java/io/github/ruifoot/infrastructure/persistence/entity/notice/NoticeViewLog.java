@@ -2,7 +2,7 @@ package io.github.ruifoot.infrastructure.persistence.entity.notice;
 
 
 import io.github.ruifoot.infrastructure.persistence.entity.BaseTimeEntity;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +27,5 @@ public class NoticeViewLog extends BaseTimeEntity {
     // 열람한 사용자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "viewer_id", nullable = false)
-    private User viewer;
+    private Users viewer;
 }

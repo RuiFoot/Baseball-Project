@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
 import io.github.ruifoot.domain.model.user.UserProfiles;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import io.github.ruifoot.infrastructure.persistence.entity.user.UserProfile;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
@@ -25,8 +25,8 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         domain.setId(entity.getId() != null ? entity.getId() : 0);
         
         // Map User entity to userId
-        if (entity.getUser() != null && entity.getUser().getId() != null) {
-            domain.setUserId(entity.getUser().getId());
+        if (entity.getUsers() != null && entity.getUsers().getId() != null) {
+            domain.setUserId(entity.getUsers().getId());
         }
         
         domain.setFullName(entity.getFullName());
@@ -60,9 +60,9 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         // For User reference, we only set the ID
         // The actual User object should be loaded by the repository
         if (domain.getUserId() > 0) {
-            User user = new User();
-            user.setId((int) domain.getUserId());
-            entity.setUser(user);
+            Users users = new Users();
+            users.setId((int) domain.getUserId());
+            entity.setUsers(users);
         }
         
         entity.setFullName(domain.getFullName());
@@ -90,10 +90,10 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         
         // For User reference, we only update if the userId has changed
         if (domain.getUserId() > 0 && 
-            (entity.getUser() == null || entity.getUser().getId() != domain.getUserId())) {
-            User user = new User();
-            user.setId((int) domain.getUserId());
-            entity.setUser(user);
+            (entity.getUsers() == null || entity.getUsers().getId() != domain.getUserId())) {
+            Users users = new Users();
+            users.setId((int) domain.getUserId());
+            entity.setUsers(users);
         }
         
         entity.setFullName(domain.getFullName());

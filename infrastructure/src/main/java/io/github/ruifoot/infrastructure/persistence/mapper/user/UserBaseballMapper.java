@@ -2,7 +2,7 @@ package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
 import io.github.ruifoot.domain.model.user.UserBaseball;
 import io.github.ruifoot.infrastructure.persistence.entity.baseball.Teams;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +22,8 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         domain.setId(entity.getId() != null ? entity.getId() : 0);
         
         // Map User entity to userId
-        if (entity.getUser() != null && entity.getUser().getId() != null) {
-            domain.setUserId(entity.getUser().getId());
+        if (entity.getUsers() != null && entity.getUsers().getId() != null) {
+            domain.setUserId(entity.getUsers().getId());
         }
         
         // Map Team entity to teamId
@@ -60,9 +60,9 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         // For User reference, we only set the ID
         // The actual User object should be loaded by the repository
         if (domain.getUserId() > 0) {
-            User user = new User();
-            user.setId((int) domain.getUserId());
-            entity.setUser(user);
+            Users users = new Users();
+            users.setId((int) domain.getUserId());
+            entity.setUsers(users);
         }
         
         // For Team reference, we only set the ID
@@ -97,10 +97,10 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         
         // For User reference, we only update if the userId has changed
         if (domain.getUserId() > 0 && 
-            (entity.getUser() == null || entity.getUser().getId() != domain.getUserId())) {
-            User user = new User();
-            user.setId((int) domain.getUserId());
-            entity.setUser(user);
+            (entity.getUsers() == null || entity.getUsers().getId() != domain.getUserId())) {
+            Users users = new Users();
+            users.setId((int) domain.getUserId());
+            entity.setUsers(users);
         }
         
         // For Team reference, we only update if the teamId has changed

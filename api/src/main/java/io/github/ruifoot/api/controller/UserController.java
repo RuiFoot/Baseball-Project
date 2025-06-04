@@ -3,7 +3,7 @@ package io.github.ruifoot.api.controller;
 
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.common.util.ApiResponseUtil;
-import io.github.ruifoot.domain.service.users.UserService;
+import io.github.ruifoot.domain.service.user.UserService;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

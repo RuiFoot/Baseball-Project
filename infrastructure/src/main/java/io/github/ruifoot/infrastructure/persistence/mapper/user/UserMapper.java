@@ -1,7 +1,6 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
-import io.github.ruifoot.domain.model.user.Users;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -9,15 +8,15 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between User entity and Users domain model.
  */
 @Component
-public class UserMapper implements EntityMapper<User, Users> {
+public class UserMapper implements EntityMapper<Users, io.github.ruifoot.domain.model.user.Users> {
 
     @Override
-    public Users toDomain(User entity) {
+    public io.github.ruifoot.domain.model.user.Users toDomain(Users entity) {
         if (entity == null) {
             return null;
         }
 
-        Users domain = new Users();
+        io.github.ruifoot.domain.model.user.Users domain = new io.github.ruifoot.domain.model.user.Users();
         domain.setId(entity.getId() != null ? entity.getId() : 0);
         domain.setUsername(entity.getUsername());
         domain.setEmail(entity.getEmail());
@@ -31,12 +30,12 @@ public class UserMapper implements EntityMapper<User, Users> {
     }
 
     @Override
-    public User toEntity(Users domain) {
+    public Users toEntity(io.github.ruifoot.domain.model.user.Users domain) {
         if (domain == null) {
             return null;
         }
 
-        User entity = new User();
+        Users entity = new Users();
 
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -57,7 +56,7 @@ public class UserMapper implements EntityMapper<User, Users> {
     }
 
     @Override
-    public User updateEntityFromDomain(User entity, Users domain) {
+    public Users updateEntityFromDomain(Users entity, io.github.ruifoot.domain.model.user.Users domain) {
         if (entity == null || domain == null) {
             return entity;
         }

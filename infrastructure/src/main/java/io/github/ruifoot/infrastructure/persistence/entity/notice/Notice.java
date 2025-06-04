@@ -1,7 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.entity.notice;
 
 import io.github.ruifoot.infrastructure.persistence.entity.BaseTimeEntity;
-import io.github.ruifoot.infrastructure.persistence.entity.user.User;
+import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -38,7 +38,7 @@ public class Notice extends BaseTimeEntity {
     // 작성자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
-    private User author;
+    private Users author;
 
     @ManyToMany
     @JoinTable(

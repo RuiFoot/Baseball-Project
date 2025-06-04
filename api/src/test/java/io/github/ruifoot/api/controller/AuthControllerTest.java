@@ -8,7 +8,7 @@ import io.github.ruifoot.api.test.BaseTest;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.service.auth.AuthService;
-import io.github.ruifoot.domain.service.users.UserService;
+import io.github.ruifoot.domain.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

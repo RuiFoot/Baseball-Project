@@ -9,7 +9,7 @@ import io.github.ruifoot.common.util.ApiResponseUtil;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.service.auth.AuthService;
-import io.github.ruifoot.domain.service.users.UserService;
+import io.github.ruifoot.domain.service.user.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;

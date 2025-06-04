@@ -1,6 +1,6 @@
 package io.github.ruifoot.infrastructure.persistence.entity.user;
 
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Position;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.Positions;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -29,6 +29,6 @@ public class UserPosition {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "position_id", nullable = false)
-    private Position position;
+    private Positions positions;
 
 }

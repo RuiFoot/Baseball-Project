@@ -1,6 +1,5 @@
 package io.github.ruifoot.infrastructure.persistence.entity.baseball;
 
-import io.github.ruifoot.infrastructure.persistence.entity.BaseTimeEntity;
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCategory;
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCode;
 import jakarta.persistence.*;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "positions")
-public class Position extends BaseTimeEntity {
+public class Positions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
