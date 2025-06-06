@@ -17,13 +17,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x ./gradlew
+      - name: Install Gradle wrapper
+        run: |
+          chmod +x ./script/sh/install-gradle-wrapper.sh
+          ./script/sh/install-gradle-wrapper.sh
 
       - name: Run tests with Gradle
-        run: ./gradlew test --no-daemon
-
-      - name: Run tests and generate report
         run: ./gradlew test --no-daemon
 
       - name: Upload test results
