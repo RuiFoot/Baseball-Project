@@ -1,0 +1,66 @@
+### 시스템 파일 ###
+.DS_Store
+Thumbs.db
+
+### 루트 파일 ###
+HELP.md
+.gradle/
+build/
+
+/.env
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!*/build.gradle
+!*/settings.gradle
+!*/gradle.properties
+
+### Java 빌드 ###
+*.class
+*.jar
+*.war
+*.ear
+
+### 로그 ###
+*.log
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse / STS ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+### VS Code ###
+.vscode/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Bin, out, build 제외 처리 ###
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+/script/
+/infrastructure/src/test/resources/.env

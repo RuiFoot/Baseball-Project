@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-container:5432/testdb
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  data:
+    redis:
+      host: redis-container
+      port: 6379
+      password: 
+
+jwt:
+  secret: testsecretkeytestsecretkeytestsecretkey
+  access-token-expiration: 3600
+  refresh-token-expiration: 604800
