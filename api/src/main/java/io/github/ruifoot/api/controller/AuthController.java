@@ -67,7 +67,7 @@ public class AuthController {
             return ApiResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
         }
     }
-
+    //TODO 리프레시토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
     @DeleteMapping("/logout")
     public ResponseEntity<CommonResponseDto<?>> logout(@RequestParam @NotBlank String token) {
         try {

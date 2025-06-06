@@ -24,7 +24,7 @@ public class UserController {
 
     private final UserService userService;
 
-
+    // TODO 토큰으로 유저를 찾을 수 있게 처리하기
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestParam @Email String email) {
         String username = userService.getUsername(email);
