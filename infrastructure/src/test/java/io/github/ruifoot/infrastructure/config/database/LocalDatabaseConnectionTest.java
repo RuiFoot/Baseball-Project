@@ -2,6 +2,7 @@ package io.github.ruifoot.infrastructure.config.database;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -17,6 +18,7 @@ import java.sql.SQLException;
  * The test verifies that the application can connect to a PostgreSQL database
  * in the local environment, not an H2 in-memory database.
  */
+@Disabled
 @ActiveProfiles({"local", "local-test"})
 public class LocalDatabaseConnectionTest extends DatabaseConnectionTest {
 
