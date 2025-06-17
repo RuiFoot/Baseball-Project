@@ -17,13 +17,13 @@ public abstract class BaseTimeEntity {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false,
-            columnDefinition = "timestamp default now()")
+            columnDefinition = "timestamp with time zone default now()")
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false,
-            columnDefinition = "timestamp default now()")
+            columnDefinition = "timestamp with time zone default now()")
     private OffsetDateTime updatedAt = OffsetDateTime.now();
 
 }
