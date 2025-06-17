@@ -11,8 +11,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "team_info")
 public class TeamInfo extends BaseTimeEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

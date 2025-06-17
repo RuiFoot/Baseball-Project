@@ -3,10 +3,12 @@ package io.github.ruifoot.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ruifoot.api.dto.auth.request.LoginRequest;
 import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
-import io.github.ruifoot.api.dto.auth.request.SignupRequest;
+import io.github.ruifoot.api.dto.auth.request.RegisterRequest;
+import io.github.ruifoot.api.mapper.RegisterMapper;
 import io.github.ruifoot.api.test.BaseTest;
-import io.github.ruifoot.domain.model.user.Users;
+import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
 import io.github.ruifoot.domain.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -93,45 +95,51 @@ public class AuthControllerTest extends BaseTest {
     }
 
     @Test
-    void signup_ReturnsUser_WhenDataIsValid() throws Exception {
+    void registerUser_ReturnsUser_WhenDataIsValid() throws Exception {
         // 준비
         String username = "newuser";
         String email = "newuser@example.com";
         String password = "password123";
-        SignupRequest signupRequest = new SignupRequest(username, password, email);
+        RegisterRequest registerRequest = new RegisterRequest(username, password, email, null, null, null);
 
         Users user = new Users();
         user.setId(1L);
         user.setUsername(username);
         user.setEmail(email);
 
+        // Convert API RegisterRequest to Core RegisterDto
+        RegisterDto coreDto = RegisterMapper.toCore(registerRequest);
+
         log.info("[DEBUG_LOG] 유효한 데이터로 /auth/signup 엔드포인트 테스트 중");
-        when(authService.register(username, email, password)).thenReturn(user);
+        when(authService.register(coreDto)).thenReturn(user);
 
         // 실행 & 검증
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signupRequest)))
+                .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated());
 
         log.info("[DEBUG_LOG] /auth/signup 엔드포인트 테스트 통과");
     }
 
     @Test
-    void signup_ReturnsFail_WhenUsernameExists() throws Exception {
+    void registerUser_ReturnsFail_WhenUsernameExists() throws Exception {
         // 준비
         String username = "existinguser";
         String email = "newuser@example.com";
         String password = "password123";
-        SignupRequest signupRequest = new SignupRequest(username, password, email);
+        RegisterRequest registerRequest = new RegisterRequest(username, password, email, null, null, null);
+
+        // Convert API RegisterRequest to Core RegisterDto
+        RegisterDto coreDto = RegisterMapper.toCore(registerRequest);
 
         log.info("[DEBUG_LOG] 이미 존재하는 사용자 이름으로 /auth/signup 엔드포인트 테스트 중");
-        when(authService.register(username, email, password)).thenThrow(new RuntimeException("Username already exists"));
+        when(authService.register(coreDto)).thenThrow(new RuntimeException("Username already exists"));
 
         // 실행 & 검증
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signupRequest)))
+                .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isConflict());
 
 

@@ -2,6 +2,7 @@ package io.github.ruifoot.infrastructure.persistence.entity.baseball;
 
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCategory;
 import io.github.ruifoot.infrastructure.persistence.entity.enums.PositionCode;
+import io.github.ruifoot.infrastructure.persistence.mapper.baseball.PositionCodeConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,7 +18,7 @@ public class Positions {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PositionCodeConverter.class)
     @Column(name = "code")
     private PositionCode code;
 

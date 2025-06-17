@@ -2,12 +2,14 @@ package io.github.ruifoot.api.controller;
 
 import io.github.ruifoot.api.dto.auth.request.LoginRequest;
 import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
-import io.github.ruifoot.api.dto.auth.request.SignupRequest;
-import io.github.ruifoot.common.dto.CommonResponseDto;
+import io.github.ruifoot.api.dto.auth.request.RegisterRequest;
+import io.github.ruifoot.api.mapper.RegisterMapper;
+import io.github.ruifoot.common.dto.ResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.common.util.ApiResponseUtil;
-import io.github.ruifoot.domain.model.user.Users;
+import io.github.ruifoot.common.util.ResponseUtil;
+import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
 import io.github.ruifoot.domain.service.user.UserService;
 import jakarta.validation.Valid;
@@ -30,51 +32,56 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/me")
-    public ResponseEntity<CommonResponseDto<?>> me() {
+    public ResponseEntity<ResponseDto<?>> me() {
         String username = userService.getUsername(1L);
-        return ApiResponseUtil.success(ResponseCode.SUCCESS, username);
+        return ResponseUtil.success(ResponseCode.SUCCESS, username);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<CommonResponseDto<?>> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<ResponseDto<?>> login(@RequestBody @Valid LoginRequest request) {
         try {
             JwtToken jwtToken = authService.login(request.email(), request.password());
-            return ApiResponseUtil.success(ResponseCode.LOGIN_SUCCESS, jwtToken);
+            return ResponseUtil.success(ResponseCode.LOGIN_SUCCESS, jwtToken);
         } catch (RuntimeException e) {
-            return ApiResponseUtil.fail(ResponseCode.INVALID_PASSWORD, e.getMessage());
+            return ResponseUtil.fail(ResponseCode.INVALID_PASSWORD, e.getMessage());
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<CommonResponseDto<?>> signup(@RequestBody @Valid SignupRequest request) {
+    public ResponseEntity<ResponseDto<?>> registerUser(@RequestBody @Valid RegisterRequest request) {
         try {
-            Users user = authService.register(request.username(), request.email(), request.password());
-            return ApiResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
+            // Convert API SignupRequest to Core SignupRequest
+            RegisterDto coreDto = RegisterMapper.toCore(request);
+
+            // Call the service with the core SignupRequest
+            Users user = authService.register(coreDto);
+
+            return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("exists")) {
-                return ApiResponseUtil.fail(ResponseCode.DUPLICATED_USER, e.getMessage());
+                return ResponseUtil.fail(ResponseCode.DUPLICATED_USER, e.getMessage());
             }
-            return ApiResponseUtil.fail(ResponseCode.INVALID_PARAMETER, e.getMessage());
+            return ResponseUtil.fail(ResponseCode.INVALID_PARAMETER, e.getMessage());
         }
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<CommonResponseDto<?>> refresh(@RequestBody @Valid RefreshTokenRequest request) {
+    public ResponseEntity<ResponseDto<?>> refresh(@RequestBody @Valid RefreshTokenRequest request) {
         try {
             JwtToken jwtToken = authService.refreshToken(request.refreshToken());
-            return ApiResponseUtil.success(ResponseCode.SUCCESS, jwtToken);
+            return ResponseUtil.success(ResponseCode.SUCCESS, jwtToken);
         } catch (RuntimeException e) {
-            return ApiResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
+            return ResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
         }
     }
     //TODO 리프레시토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
     @DeleteMapping("/logout")
-    public ResponseEntity<CommonResponseDto<?>> logout(@RequestParam @NotBlank String token) {
+    public ResponseEntity<ResponseDto<?>> logout(@RequestParam @NotBlank String token) {
         try {
             authService.logout(token);
-            return ApiResponseUtil.success(ResponseCode.LOGOUT_SUCCESS);
+            return ResponseUtil.success(ResponseCode.LOGOUT_SUCCESS);
         } catch (RuntimeException e) {
-            return ApiResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
+            return ResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
         }
     }
 
@@ -85,4 +92,9 @@ public class AuthController {
     /*
     TODO[AuthController]: 소셜 로그인 사용시 기능 추가 필요
      */
+    /*
+    TODO[AuthController]: 관리자 계정 생성 기능 추가 필요
+    TODO[AuthController]: 관리자 계정으로 admin_approved 체크해주는 기능 필요
+     */
+
 }

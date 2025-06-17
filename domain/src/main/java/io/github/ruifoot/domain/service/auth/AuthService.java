@@ -1,19 +1,17 @@
 package io.github.ruifoot.domain.service.auth;
 
-import io.github.ruifoot.domain.model.user.Users;
+import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
+import io.github.ruifoot.domain.model.user.Users;
 
 public interface AuthService {
 
     String getUsername(long id);
     /**
-     * Register a new user
-     * @param username Username
-     * @param email Email
-     * @param password Password (plain text)
+     * Register a new user with profile, baseball, and position information
      * @return Registered user
      */
-    Users register(String username, String email, String password);
+    Users register(RegisterDto coreDto);
 
     /**
      * Log in a user

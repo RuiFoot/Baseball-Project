@@ -2,7 +2,7 @@ package io.github.ruifoot.api.controller;
 
 
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.common.util.ApiResponseUtil;
+import io.github.ruifoot.common.util.ResponseUtil;
 import io.github.ruifoot.domain.service.user.UserService;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestParam @Email String email) {
         String username = userService.getUsername(email);
-        return ApiResponseUtil.success(ResponseCode.SUCCESS,username);
+        return ResponseUtil.success(ResponseCode.SUCCESS,username);
     }
 
     /*

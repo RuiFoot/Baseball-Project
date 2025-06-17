@@ -1,8 +1,8 @@
 package io.github.ruifoot.infrastructure.persistence.entity;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,14 +14,16 @@ import java.time.OffsetDateTime;
 @Setter
 @Getter
 public abstract class BaseTimeEntity {
-    @NotNull
+
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false,
+            columnDefinition = "timestamp default now()")
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
-    @NotNull
+
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false,
+            columnDefinition = "timestamp default now()")
     private OffsetDateTime updatedAt = OffsetDateTime.now();
 
 }
