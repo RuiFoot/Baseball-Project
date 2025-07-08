@@ -2,6 +2,8 @@ package io.github.ruifoot.core.service.auth;
 
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
+import io.github.ruifoot.domain.dto.auth.request.AdminApprovalDto;
+import io.github.ruifoot.domain.dto.auth.request.AdminRegisterDto;
 import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.UserBaseball;
@@ -180,5 +182,113 @@ public class AuthServiceImpl implements AuthService {
 
         redisService.deleteValues(refreshToken);
         return true; // 삭제 성공
+    }
+
+    @Override
+    public Users registerAdmin(AdminRegisterDto adminRegisterDto) {
+        // Extract basic user information
+        String username = adminRegisterDto.username();
+        String email = adminRegisterDto.email();
+        String password = adminRegisterDto.password();
+
+        // Check if username or email already exists
+        if (userRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        // Create new admin user
+        Users user = new Users();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setRole("ADMIN");
+        user.setAdminApproved(true);
+
+        // Create UserProfiles if profile data is provided
+        UserProfiles userProfile = null;
+        if (adminRegisterDto.profile() != null) {
+            userProfile = new UserProfiles();
+            userProfile.setUserId(0); // Will be set after user is saved
+
+            // Extract profile data
+            userProfile.setFullName(adminRegisterDto.profile().fullName());
+
+            // Convert string date to SQL Date if provided
+            String birthDateStr = adminRegisterDto.profile().birthDate();
+            if (birthDateStr != null && !birthDateStr.isEmpty()) {
+                try {
+                    LocalDate localDate = LocalDate.parse(birthDateStr, DateTimeFormatter.ISO_DATE);
+                    userProfile.setBirthDate(Date.valueOf(localDate));
+                } catch (Exception e) {
+                    // Handle date parsing error
+                    System.err.println("Error parsing birth date: " + e.getMessage());
+                }
+            }
+
+            userProfile.setPhone(adminRegisterDto.profile().phone());
+            userProfile.setResidence(adminRegisterDto.profile().residence());
+        }
+
+        // Create UserBaseball if baseball data is provided
+        UserBaseball userBaseball = null;
+        if (adminRegisterDto.baseball() != null) {
+            userBaseball = new UserBaseball();
+            userBaseball.setUserId(0); // Will be set after user is saved
+
+            // Extract baseball data
+            if (adminRegisterDto.baseball().teamId() != null) {
+                userBaseball.setTeamId(adminRegisterDto.baseball().teamId());
+            }
+
+            if (adminRegisterDto.baseball().jerseyNo() != null) {
+                userBaseball.setJerseyNo(adminRegisterDto.baseball().jerseyNo());
+            }
+
+            userBaseball.setThrowingHand(adminRegisterDto.baseball().throwingHand());
+            userBaseball.setBattingHand(adminRegisterDto.baseball().battingHand());
+        }
+
+        // Create UserPositions if position data is provided
+        List<UserPositions> userPositions = null;
+        List<Integer> positionIds = adminRegisterDto.position() != null ? adminRegisterDto.position().positionIds() : null;
+        if (positionIds != null && !positionIds.isEmpty()) {
+            // If userBaseball is null but positions are provided, create a basic UserBaseball entity
+            if (userBaseball == null) {
+                userBaseball = new UserBaseball();
+                userBaseball.setUserId(0); // Will be set after user is saved
+            }
+
+            // Create UserPositions for each position ID
+            userPositions = new java.util.ArrayList<>();
+            for (Integer positionId : positionIds) {
+                UserPositions userPosition = new UserPositions();
+                userPosition.setUserBaseballId(0); // Will be set after userBaseball is saved
+                userPosition.setPositionId(positionId);
+                userPositions.add(userPosition);
+            }
+        }
+
+        // Save the user with all its related entities
+        return userRepository.saveWithRelationships(user, userProfile, userBaseball, userPositions);
+    }
+
+    @Override
+    public Users updateAdminApproval(AdminApprovalDto adminApprovalDto) {
+        String username = adminApprovalDto.username();
+        boolean approved = adminApprovalDto.approved();
+
+        // Find the user by username
+        Users user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        // Update admin approval status
+        user.setAdminApproved(approved);
+
+        // Save and return the updated user
+        return userRepository.save(user);
     }
 }

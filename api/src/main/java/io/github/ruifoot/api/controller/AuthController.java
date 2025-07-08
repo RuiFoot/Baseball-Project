@@ -1,5 +1,7 @@
 package io.github.ruifoot.api.controller;
 
+import io.github.ruifoot.api.dto.auth.request.AdminApprovalRequest;
+import io.github.ruifoot.api.dto.auth.request.AdminRegisterRequest;
 import io.github.ruifoot.api.dto.auth.request.LoginRequest;
 import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
 import io.github.ruifoot.api.dto.auth.request.RegisterRequest;
@@ -93,8 +95,50 @@ public class AuthController {
     TODO[AuthController]: 소셜 로그인 사용시 기능 추가 필요
      */
     /*
-    TODO[AuthController]: 관리자 계정 생성 기능 추가 필요
-    TODO[AuthController]: 관리자 계정으로 admin_approved 체크해주는 기능 필요
+    DONE[AuthController]: 관리자 계정 생성 기능 추가 필요
+    DONE[AuthController]: 관리자 계정으로 admin_approved 체크해주는 기능 필요
      */
 
+    /**
+     * Register a new admin user
+     * @param request Admin registration request
+     * @return Response with created admin user
+     */
+    @PostMapping("/admin/signup")
+    public ResponseEntity<ResponseDto<?>> registerAdmin(@RequestBody @Valid AdminRegisterRequest request) {
+        try {
+            // Convert API AdminRegisterRequest to Core AdminRegisterDto
+            var coreDto = RegisterMapper.toCoreAdmin(request);
+
+            // Call the service with the core AdminRegisterDto
+            Users user = authService.registerAdmin(coreDto);
+
+            return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("exists")) {
+                return ResponseUtil.fail(ResponseCode.DUPLICATED_USER, e.getMessage());
+            }
+            return ResponseUtil.fail(ResponseCode.INVALID_PARAMETER, e.getMessage());
+        }
+    }
+
+    /**
+     * Update admin approval status for a user
+     * @param request Admin approval request
+     * @return Response with updated user
+     */
+    @PutMapping("/admin/approval")
+    public ResponseEntity<ResponseDto<?>> updateAdminApproval(@RequestBody @Valid AdminApprovalRequest request) {
+        try {
+            // Convert API AdminApprovalRequest to Core AdminApprovalDto
+            var coreDto = RegisterMapper.toCoreApproval(request);
+
+            // Call the service with the core AdminApprovalDto
+            Users user = authService.updateAdminApproval(coreDto);
+
+            return ResponseUtil.success(ResponseCode.SUCCESS, user);
+        } catch (RuntimeException e) {
+            return ResponseUtil.fail(ResponseCode.INVALID_PARAMETER, e.getMessage());
+        }
+    }
 }
