@@ -23,5 +23,6 @@ public class Tag extends BaseTimeEntity {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
+    @Builder.Default
     private Set<Notice> notices = new HashSet<>();
 }

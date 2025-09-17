@@ -29,9 +29,11 @@ public class Notice extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Builder.Default
     @Column(nullable = false)
     private int viewCount = 0;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isPinned = false;
 
@@ -46,5 +48,6 @@ public class Notice extends BaseTimeEntity {
             joinColumns = @JoinColumn(name = "notice_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 }
