@@ -1,10 +1,6 @@
 package io.github.ruifoot.api.controller;
 
-import io.github.ruifoot.api.dto.auth.request.AdminApprovalRequest;
-import io.github.ruifoot.api.dto.auth.request.AdminRegisterRequest;
-import io.github.ruifoot.api.dto.auth.request.LoginRequest;
-import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
-import io.github.ruifoot.api.dto.auth.request.RegisterRequest;
+import io.github.ruifoot.api.dto.auth.request.*;
 import io.github.ruifoot.api.mapper.RegisterMapper;
 import io.github.ruifoot.common.dto.ResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
@@ -15,7 +11,6 @@ import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
 import io.github.ruifoot.domain.service.user.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +20,13 @@ import org.springframework.web.bind.annotation.*;
  * 인증, 인가를 위한 컨트롤러
  * 로그인, 회원가입, 토큰 발급/갱신, 인증 관련 기능
  */
-@RestController(value = "auth")
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/auth") // API 버전 명시
 public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
-
-    @GetMapping("/me")
-    public ResponseEntity<ResponseDto<?>> me() {
-        String username = userService.getUsername(1L);
-        return ResponseUtil.success(ResponseCode.SUCCESS, username);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<?>> login(@RequestBody @Valid LoginRequest request) {
@@ -49,6 +38,13 @@ public class AuthController {
         }
     }
 
+    /*
+    TODO[AuthController]: 회원가입 API 스펙 확장 필요
+     - 현재 프론트엔드에서는 간단한 정보만 받지만, 백엔드 `RegisterDto`는 상세 정보를 포함.
+     - 프론트엔드와 협의하여 회원가입 시점에 모든 정보를 받을지(추천),
+       아니면 최소 정보로 가입 후 추가 정보를 입력받을지 결정 필요.
+     - 현재는 백엔드 스펙에 맞춰 상세 정보를 모두 받는다고 가정.
+    */
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<?>> registerUser(@RequestBody @Valid RegisterRequest request) {
         try {
@@ -76,11 +72,12 @@ public class AuthController {
             return ResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
         }
     }
-    //TODO 리프레시토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
+
+    //TODO: 리프레시 토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
     @DeleteMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(@RequestParam @NotBlank String token) {
+    public ResponseEntity<ResponseDto<?>> logout(@RequestBody RefreshTokenRequest request) {
         try {
-            authService.logout(token);
+            authService.logout(request.refreshToken());
             return ResponseUtil.success(ResponseCode.LOGOUT_SUCCESS);
         } catch (RuntimeException e) {
             return ResponseUtil.fail(ResponseCode.INVALID_TOKEN, e.getMessage());
@@ -88,15 +85,14 @@ public class AuthController {
     }
 
     /*
-    TODO[AuthController]: 비밀번호 재설정 기능 필요
+    TODO[AuthController]: 비밀번호 찾기/재설정 기능 필요
+     - 1. 비밀번호 재설정 요청 (이메일 인증)
+     - 2. 재설정 토큰 검증
+     - 3. 새 비밀번호로 변경
      */
 
     /*
-    TODO[AuthController]: 소셜 로그인 사용시 기능 추가 필요
-     */
-    /*
-    DONE[AuthController]: 관리자 계정 생성 기능 추가 필요
-    DONE[AuthController]: 관리자 계정으로 admin_approved 체크해주는 기능 필요
+    TODO[AuthController]: 소셜 로그인 기능 추가 필요 (카카오, 구글 등)
      */
 
     /**

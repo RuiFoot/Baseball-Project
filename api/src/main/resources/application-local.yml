@@ -19,6 +19,9 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
         format_sql: true
+  sql:
+    init:
+      mode: always
 
 logging:
   level:

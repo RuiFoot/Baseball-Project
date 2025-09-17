@@ -14,25 +14,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * 유저 관련 기능을 위한 컨트롤러
- * 사용자 프로필 조회, 개인정보 수정 등 활용 예정
+ * 로그인한 사용자 관련 기능을 위한 컨트롤러
+ * (내 정보, 프로필 수정 등)
  */
-@RestController(value = "user")
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/v1/users") // API 버전 명시
 public class UserController {
 
     private final UserService userService;
 
-    // TODO 토큰으로 유저를 찾을 수 있게 처리하기
+    // TODO: Spring Security Context에서 인증된 사용자 정보 가져오도록 수정
     @GetMapping("/me")
-    public ResponseEntity<?> me(@RequestParam @Email String email) {
-        String username = userService.getUsername(email);
-        return ResponseUtil.success(ResponseCode.SUCCESS,username);
+    public ResponseEntity<?> me() {
+        // 예시: SecurityContextHolder.getContext().getAuthentication().getName()
+        String currentUsername = "testuser"; // 임시
+        // Users user = userService.getUserByUsername(currentUsername);
+        // return ResponseUtil.success(ResponseCode.SUCCESS, user);
+        return ResponseUtil.success(ResponseCode.SUCCESS, currentUsername);
     }
 
     /*
-    TODO[UserController]: 사용자 프로필 조회, 개인정보 수정
+    TODO[UserController]: 내 프로필 정보 조회 (GET /me/profile)
+     - Response: UserProfileDto
      */
 
+    /*
+    TODO[UserController]: 내 프로필 정보 수정 (PUT /me/profile)
+     - RequestBody: UpdateProfileRequest
+     */
+
+    /*
+    TODO[UserController]: 내 비밀번호 변경 (PUT /me/password)
+     - RequestBody: { "currentPassword": "...", "newPassword": "..." }
+     */
 }
