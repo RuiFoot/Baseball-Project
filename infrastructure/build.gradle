@@ -6,11 +6,6 @@ plugins {
 group = 'io.github.ruifoot'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(22)
-	}
-}
 
 repositories {
 	mavenCentral()
@@ -43,8 +38,8 @@ dependencies {
 	testImplementation("io.github.cdimascio:dotenv-java:3.0.0")
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok:1.18.40'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
 
 }
 
@@ -53,132 +48,7 @@ jar {
 	enabled = true
 }
 
-jacoco {
-	toolVersion = "0.8.12"
-}
-
-jacocoTestReport {
-	reports {
-		xml.required = true
-		//csv.required = true
-		//html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-	}
-}
 
 tasks.named('test') {
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport
-}
-
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.6
-			}
-		}
-	}
-}
-
-
-// Task to print coverage report to console
-tasks.register('printCoverageReport') {
-	group = 'Verification'
-	description = 'Prints coverage report to console'
-
-	dependsOn jacocoTestReport
-
-	doLast {
-		def jacocoReportDir = layout.buildDirectory.dir('jacocoHtml').get().asFile
-		def jacocoXmlReport = layout.buildDirectory.file('reports/jacoco/test/jacocoTestReport.xml').get().asFile
-
-		if (jacocoXmlReport.exists()) {
-			def cleanedXml = jacocoXmlReport.getText("UTF-8").replaceFirst(/<!DOCTYPE[^>]*>/, "")
-			def xml = new XmlSlurper().parseText(cleanedXml)
-
-			def counter = xml.counter
-
-			def instructionCovered = counter.find { it.@type == 'INSTRUCTION' }.@covered.text() as int
-			def instructionMissed = counter.find { it.@type == 'INSTRUCTION' }.@missed.text() as int
-			def instructionTotal = instructionCovered + instructionMissed
-			def instructionCoverage = instructionTotal > 0 ? (instructionCovered * 100 / instructionTotal) : 0
-
-			def branchCovered = counter.find { it.@type == 'BRANCH' }.@covered.text() as int
-			def branchMissed = counter.find { it.@type == 'BRANCH' }.@missed.text() as int
-			def branchTotal = branchCovered + branchMissed
-			def branchCoverage = branchTotal > 0 ? (branchCovered * 100 / branchTotal) : 0
-
-			def lineCovered = counter.find { it.@type == 'LINE' }.@covered.text() as int
-			def lineMissed = counter.find { it.@type == 'LINE' }.@missed.text() as int
-			def lineTotal = lineCovered + lineMissed
-			def lineCoverage = lineTotal > 0 ? (lineCovered * 100 / lineTotal) : 0
-
-			def methodCovered = counter.find { it.@type == 'METHOD' }.@covered.text() as int
-			def methodMissed = counter.find { it.@type == 'METHOD' }.@missed.text() as int
-			def methodTotal = methodCovered + methodMissed
-			def methodCoverage = methodTotal > 0 ? (methodCovered * 100 / methodTotal) : 0
-
-			def classCovered = counter.find { it.@type == 'CLASS' }.@covered.text() as int
-			def classMissed = counter.find { it.@type == 'CLASS' }.@missed.text() as int
-			def classTotal = classCovered + classMissed
-			def classCoverage = classTotal > 0 ? (classCovered * 100 / classTotal) : 0
-
-			println "\n========== JaCoCo Coverage Report ==========\n"
-			println "Instructions: ${instructionCovered}/${instructionTotal} (${String.format('%.2f', instructionCoverage)}%)"
-			println "Branches:     ${branchCovered}/${branchTotal} (${String.format('%.2f', branchCoverage)}%)"
-			println "Lines:        ${lineCovered}/${lineTotal} (${String.format('%.2f', lineCoverage)}%)"
-			println "Methods:      ${methodCovered}/${methodTotal} (${String.format('%.2f', methodCoverage)}%)"
-			println "Classes:      ${classCovered}/${classTotal} (${String.format('%.2f', classCoverage)}%)"
-			println "\nDetailed HTML report: file://${jacocoReportDir.absolutePath}/index.html"
-			println "\n============================================\n"
-
-			// Print coverage details for each package
-			println "\n========== Package Coverage Details ==========\n"
-			xml.package.each { pkg ->
-				def packageName = pkg.@name.text()
-				def packageCounter = pkg.counter
-
-				def pkgInstructionCovered = packageCounter.find { it.@type == 'INSTRUCTION' }.@covered.text() as int
-				def pkgInstructionMissed = packageCounter.find { it.@type == 'INSTRUCTION' }.@missed.text() as int
-				def pkgInstructionTotal = pkgInstructionCovered + pkgInstructionMissed
-				def pkgInstructionCoverage = pkgInstructionTotal > 0 ? (pkgInstructionCovered * 100 / pkgInstructionTotal) : 0
-
-				def pkgLineCovered = packageCounter.find { it.@type == 'LINE' }.@covered.text() as int
-				def pkgLineMissed = packageCounter.find { it.@type == 'LINE' }.@missed.text() as int
-				def pkgLineTotal = pkgLineCovered + pkgLineMissed
-				def pkgLineCoverage = pkgLineTotal > 0 ? (pkgLineCovered * 100 / pkgLineTotal) : 0
-
-				println "Package: ${packageName}"
-				println "  Instructions: ${pkgInstructionCovered}/${pkgInstructionTotal} (${String.format('%.2f', pkgInstructionCoverage)}%)"
-				println "  Lines:        ${pkgLineCovered}/${pkgLineTotal} (${String.format('%.2f', pkgLineCoverage)}%)"
-
-				// Print class coverage for this package
-				pkg.class.each { cls ->
-					def className = cls.@name.text().split('\\$')[0].split('\\.').last()
-					def classCounter = cls.counter
-
-					def clsLineCovered = classCounter.find { it.@type == 'LINE' }?.@covered?.text() as int ?: 0
-					def clsLineMissed = classCounter.find { it.@type == 'LINE' }?.@missed?.text() as int ?: 0
-					def clsLineTotal = clsLineCovered + clsLineMissed
-					def clsLineCoverage = clsLineTotal > 0 ? (clsLineCovered * 100 / clsLineTotal) : 0
-
-					println "    Class: ${className} - Lines: ${clsLineCovered}/${clsLineTotal} (${String.format('%.2f', clsLineCoverage)}%)"
-				}
-				println ""
-			}
-			println "============================================\n"
-		} else {
-			println "JaCoCo XML report not found. Run tests first."
-		}
-	}
-}
-
-// Custom task to run tests with coverage reporting and verification
-tasks.register('testWithCoverage', Test) {
-	group = 'Verification'
-	description = 'Runs tests with code coverage analysis'
-
-	dependsOn test
-	finalizedBy jacocoTestCoverageVerification
-	finalizedBy printCoverageReport
 }

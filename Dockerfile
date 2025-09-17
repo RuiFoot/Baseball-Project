@@ -1,5 +1,5 @@
 # 1단계: 빌드 및 테스트
-FROM gradle:8.4-jdk21 AS builder
+FROM gradle:jdk24 AS builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN gradle :api:bootJar --no-daemon --build-cache
 
 
 # 2단계: 실행 환경
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:24-jdk-alpine
 
 WORKDIR /app
 
