@@ -1,19 +1,19 @@
 package io.github.ruifoot.domain.service.auth;
 
-import io.github.ruifoot.domain.model.user.Users;
+import io.github.ruifoot.domain.dto.auth.request.AdminApprovalDto;
+import io.github.ruifoot.domain.dto.auth.request.AdminRegisterDto;
+import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
+import io.github.ruifoot.domain.model.user.Users;
 
 public interface AuthService {
 
     String getUsername(long id);
     /**
-     * Register a new user
-     * @param username Username
-     * @param email Email
-     * @param password Password (plain text)
+     * Register a new user with profile, baseball, and position information
      * @return Registered user
      */
-    Users register(String username, String email, String password);
+    Users register(RegisterDto coreDto);
 
     /**
      * Log in a user
@@ -36,4 +36,18 @@ public interface AuthService {
      * @param refreshToken Refresh token to invalidate
      */
     boolean logout(String refreshToken);
+
+    /**
+     * Register a new admin user with profile, baseball, and position information
+     * @param adminRegisterDto Admin registration data
+     * @return Registered admin user
+     */
+    Users registerAdmin(AdminRegisterDto adminRegisterDto);
+
+    /**
+     * Update admin approval status for a user
+     * @param adminApprovalDto Admin approval data
+     * @return Updated user
+     */
+    Users updateAdminApproval(AdminApprovalDto adminApprovalDto);
 }

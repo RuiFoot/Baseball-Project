@@ -9,6 +9,9 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -21,8 +24,11 @@ public class UserBaseball extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")  // FK 컬럼명
     private Users users;
+
+    @OneToMany(mappedBy = "userBaseball", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserPosition> positions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)

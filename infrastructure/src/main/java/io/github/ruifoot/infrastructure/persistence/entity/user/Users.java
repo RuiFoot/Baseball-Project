@@ -49,6 +49,13 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Column(name = "admin_approved", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private boolean adminApproved = false;
 
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private UserProfile profile;
+
+    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
+    private UserBaseball baseball;
+
+
 
     public Users(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
         super();

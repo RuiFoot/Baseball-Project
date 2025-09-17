@@ -1,8 +1,7 @@
 package io.github.ruifoot.common.exception;
 
-import io.github.ruifoot.common.dto.CommonResponseDto;
+import io.github.ruifoot.common.dto.ResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.common.util.ApiResponseUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,22 +14,22 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<CommonResponseDto<Void>> handleCustomException(CustomException e) {
+    public ResponseEntity<ResponseDto<Void>> handleCustomException(CustomException e) {
         ResponseCode code = e.getCode();
         return ResponseEntity
                 .status(code.getStatus())
-                .body(CommonResponseDto.of(code));
+                .body(ResponseDto.of(code));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CommonResponseDto<Void>> handleGeneralException(Exception e) {
+    public ResponseEntity<ResponseDto<Void>> handleGeneralException(Exception e) {
         return ResponseEntity
                 .status(ResponseCode.INTERNAL_ERROR.getStatus())
-                .body(CommonResponseDto.of(ResponseCode.INTERNAL_ERROR));
+                .body(ResponseDto.of(ResponseCode.INTERNAL_ERROR));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CommonResponseDto<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ResponseDto<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
@@ -38,10 +37,10 @@ public class GlobalExceptionHandler {
         ResponseCode code = ResponseCode.VALIDATION_ERROR;
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new CommonResponseDto<>(code.getStatus(), errorMessage,null));
+                .body(new ResponseDto<>(code.getStatus(), errorMessage,null));
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<CommonResponseDto<Void>> handleJsonParseException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ResponseDto<Void>> handleJsonParseException(HttpMessageNotReadableException ex) {
 
         // 기본 한글 메시지 설정
         String errorMessage = "요청 본문(JSON)이 올바르지 않거나, 필수 항목이 누락되었습니다.";
@@ -58,7 +57,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new CommonResponseDto<>(code.getStatus(), combinedMessage, null));
+                .body(new ResponseDto<>(code.getStatus(), combinedMessage, null));
     }
 
 }
