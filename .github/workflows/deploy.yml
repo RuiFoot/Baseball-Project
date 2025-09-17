@@ -19,7 +19,7 @@ jobs:
       - name: Install Gradle wrapper
         run: |
           chmod +x ./script/sh/install-gradle-wrapper.sh
-          ./script/sh/install-gradle-wrapper.sh
+          ./script/sh/install-gradle-wrapper.sh 8.14
 
       - name: Run tests with Gradle
         run: ./gradlew test --no-daemon
