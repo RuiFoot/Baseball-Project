@@ -8,7 +8,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(22)
 	}
 }
 
@@ -54,14 +54,14 @@ jar {
 }
 
 jacoco {
-	toolVersion = "0.8.11"
+	toolVersion = "0.8.12"
 }
 
 jacocoTestReport {
 	reports {
 		xml.required = true
-		csv.required = true
-		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+		//csv.required = true
+		//html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
 	}
 }
 

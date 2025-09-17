@@ -46,6 +46,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Column(name = "role", nullable = false, length = 20)
     private String role;
 
+    @Builder.Default
     @Column(name = "admin_approved", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private boolean adminApproved = false;
 

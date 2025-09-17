@@ -192,13 +192,13 @@ public class AuthControllerTest extends BaseTest {
     void logout_ReturnsSuccess() throws Exception {
         // 준비
         String refreshToken = "valid-refresh-token";
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
         log.info("[DEBUG_LOG] /auth/logout 엔드포인트 테스트 중");
-
-        when(authService.logout(refreshToken)).thenReturn(true);
 
         // 실행 & 검증
         mockMvc.perform(delete("/auth/logout")
-                .param("token", refreshToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
         log.info("[DEBUG_LOG] /auth/logout 엔드포인트 테스트 통과");
@@ -208,13 +208,15 @@ public class AuthControllerTest extends BaseTest {
     void logout_ReturnsFail_WhenTokenIsInvalid() throws Exception {
         // 준비
         String refreshToken = "invalid-refresh-token";
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
         log.info("[DEBUG_LOG] 유효하지 않은 토큰으로 /auth/logout 엔드포인트 테스트 중");
 
         when(authService.logout(refreshToken)).thenThrow(new RuntimeException("Invalid token"));
 
         // 실행 & 검증
         mockMvc.perform(delete("/auth/logout")
-                .param("token", refreshToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
 
         log.info("[DEBUG_LOG] 유효하지 않은 토큰으로 /auth/logout 엔드포인트 테스트 통과");

@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate # 운영에서는 validate 추천
+      ddl-auto: update # 운영에서는 validate 추천
     show-sql: false
     properties:
       hibernate:
