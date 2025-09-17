@@ -11,7 +11,7 @@ if not exist "gradle\wrapper" mkdir "gradle\wrapper"
 
 :: Download the Gradle wrapper JAR
 echo Downloading Gradle wrapper JAR...
-powershell -Command "& {Invoke-WebRequest -Uri 'https://github.com/gradle/gradle/raw/v8.13.0/gradle/wrapper/gradle-wrapper.jar' -OutFile 'gradle\wrapper\gradle-wrapper.jar'}"
+powershell -Command "& {Invoke-WebRequest -Uri 'https://github.com/gradle/gradle/raw/v8.14.0/gradle/wrapper/gradle-wrapper.jar' -OutFile 'gradle\wrapper\gradle-wrapper.jar'}"
 
 :: Verify the download
 for %%F in (gradle\wrapper\gradle-wrapper.jar) do (
