@@ -35,7 +35,7 @@ public class SecurityConfigTest extends BaseTest {
                 });
 
         // Swagger 엔드포인트
-        log.info("[DEBUG_LOG] 공개 엔드포인트 테스트 중: /swagger-ui/index.html");
+        log.info("[DEBUG_LOG] 공개 엔드포인트 테스트 중: /");
         mockMvc.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk())
                 .andDo(result -> log.info("[DEBUG_LOG] 응답 상태: {}", result.getResponse().getStatus()));
