@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
 import io.github.ruifoot.domain.model.baseball.TeamContact;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContactEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between TeamContact entity and TeamContact domain model.
  */
 @Component
-public class TeamContactMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact, TeamContact> {
+public class TeamContactMapper implements EntityMapper<TeamContactEntity, TeamContact> {
 
     @Override
-    public TeamContact toDomain(io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact entity) {
+    public TeamContact toDomain(TeamContactEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -32,12 +33,12 @@ public class TeamContactMapper implements EntityMapper<io.github.ruifoot.infrast
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact toEntity(TeamContact domain) {
+    public TeamContactEntity toEntity(TeamContact domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact entity = new io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact();
+        TeamContactEntity entity = new TeamContactEntity();
 
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -55,8 +56,8 @@ public class TeamContactMapper implements EntityMapper<io.github.ruifoot.infrast
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamContact entity, TeamContact domain) {
+    public TeamContactEntity updateEntityFromDomain(
+            TeamContactEntity entity, TeamContact domain) {
         if (entity == null || domain == null) {
             return entity;
         }

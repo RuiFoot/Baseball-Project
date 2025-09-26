@@ -1,19 +1,19 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
 import io.github.ruifoot.domain.model.notice.Tag;
+import io.github.ruifoot.infrastructure.persistence.entity.notice.TagsEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Mapper for converting between Tag entity and Tag domain model.
  */
 @Component
-public class TagMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.notice.Tag, Tag> {
+public class TagMapper implements EntityMapper<TagsEntity, Tag> {
 
     @Override
-    public Tag toDomain(io.github.ruifoot.infrastructure.persistence.entity.notice.Tag entity) {
+    public Tag toDomain(TagsEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -31,12 +31,12 @@ public class TagMapper implements EntityMapper<io.github.ruifoot.infrastructure.
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Tag toEntity(Tag domain) {
+    public TagsEntity toEntity(Tag domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.notice.Tag entity = new io.github.ruifoot.infrastructure.persistence.entity.notice.Tag();
+        TagsEntity entity = new TagsEntity();
 
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -46,14 +46,14 @@ public class TagMapper implements EntityMapper<io.github.ruifoot.infrastructure.
 
         // We don't map notices to avoid circular references
         // This will be handled by the NoticeMapper
-        entity.setNotices(new HashSet<>());
+        entity.setNoticeEntities(new ArrayList<>());
 
         return entity;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Tag updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.notice.Tag entity, Tag domain) {
+    public TagsEntity updateEntityFromDomain(
+            TagsEntity entity, Tag domain) {
         if (entity == null || domain == null) {
             return entity;
         }

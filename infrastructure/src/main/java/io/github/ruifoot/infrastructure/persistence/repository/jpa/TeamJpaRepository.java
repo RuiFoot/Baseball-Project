@@ -1,9 +1,9 @@
 package io.github.ruifoot.infrastructure.persistence.repository.jpa;
 
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Teams;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeamJpaRepository extends JpaRepository<Teams, Long> {
+public interface TeamJpaRepository extends JpaRepository<TeamsEntity, Long> {
 }

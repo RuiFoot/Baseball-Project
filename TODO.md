@@ -11,54 +11,54 @@
 ### 1.1. 팀 기본 CRUD
 
 - [ ] **팀 생성**
-  - `POST /api/v1/teams`
+  - `POST /api/v1/teamsEntity`
   - **설명:** 새로운 팀을 생성합니다. 요청한 사용자는 자동으로 해당 팀의 '팀장'이 됩니다.
   - **Request Body:** `{ "name": "팀 이름", "region": "활동 지역", "description": "팀 소개" }`
 
 - [ ] **팀 목록 조회 (검색 포함)**
-  - `GET /api/v1/teams`
+  - `GET /api/v1/teamsEntity`
   - **설명:** 전체 팀 목록을 조회합니다. 이름 또는 지역으로 검색 및 페이지네이션 기능을 지원합니다.
   - **Query Params:** `?name={name}&region={region}&page=0&size=10`
 
 - [ ] **특정 팀 상세 정보 조회**
-  - `GET /api/v1/teams/{teamId}`
+  - `GET /api/v1/teamsEntity/{teamId}`
   - **설명:** 특정 팀의 상세 정보(멤버 목록, 전적 등 포함)를 조회합니다.
 
 - [ ] **팀 정보 수정**
-  - `PUT /api/v1/teams/{teamId}`
+  - `PUT /api/v1/teamsEntity/{teamId}`
   - **설명:** 팀의 이름, 활동 지역, 소개 등을 수정합니다. (팀 관리자 권한 필요)
   - **Request Body:** `{ "region": "새로운 활동 지역", "description": "수정된 팀 소개" }`
 
 - [ ] **팀 삭제**
-  - `DELETE /api/v1/teams/{teamId}`
+  - `DELETE /api/v1/teamsEntity/{teamId}`
   - **설명:** 팀을 해체합니다. (팀장만 가능)
 
 ### 1.2. 팀 멤버 관리
 
 - [ ] **팀 가입 신청**
-  - `POST /api/v1/teams/{teamId}/join-requests`
+  - `POST /api/v1/teamsEntity/{teamId}/join-requests`
   - **설명:** 사용자가 특정 팀에 가입 신청을 보냅니다.
 
 - [ ] **팀 가입 신청 목록 조회**
-  - `GET /api/v1/teams/{teamId}/join-requests`
+  - `GET /api/v1/teamsEntity/{teamId}/join-requests`
   - **설명:** 해당 팀의 가입 신청 목록을 조회합니다. (팀 관리자 권한 필요)
 
 - [ ] **팀 가입 신청 처리 (승인/거절)**
-  - `POST /api/v1/teams/{teamId}/join-requests/{requestId}`
+  - `POST /api/v1/teamsEntity/{teamId}/join-requests/{requestId}`
   - **설명:** 가입 신청을 승인하거나 거절합니다. (팀 관리자 권한 필요)
   - **Request Body:** `{ "action": "APPROVE" or "REJECT" }`
 
 - [ ] **팀원 목록 조회**
-  - `GET /api/v1/teams/{teamId}/members`
+  - `GET /api/v1/teamsEntity/{teamId}/members`
   - **설명:** 팀에 소속된 모든 멤버의 목록을 조회합니다.
 
 - [ ] **팀원 역할 변경**
-  - `PUT /api/v1/teams/{teamId}/members/{userId}/role`
+  - `PUT /api/v1/teamsEntity/{teamId}/members/{userId}/role`
   - **설명:** 팀원의 역할(예: 선수, 코치)을 변경합니다. (팀 관리자 권한 필요)
   - **Request Body:** `{ "role": "COACH" }`
 
 - [ ] **팀원 방출**
-  - `DELETE /api/v1/teams/{teamId}/members/{userId}`
+  - `DELETE /api/v1/teamsEntity/{teamId}/members/{userId}`
   - **설명:** 팀에서 특정 멤버를 방출합니다. (팀 관리자 권한 필요)
 
 ---
@@ -73,7 +73,7 @@
   - **Request Body:** `{ "gameDateTime": "2025-10-05T14:00:00", "location": "xx야구장", "homeTeamId": 1, "awayTeamId": 2 }`
 
 - [ ] **팀의 경기 일정 목록 조회**
-  - `GET /api/v1/teams/{teamId}/games`
+  - `GET /api/v1/teamsEntity/{teamId}/games`
   - **설명:** 특정 팀의 예정되거나 완료된 경기 목록을 조회합니다.
   - **Query Params:** `?status=SCHEDULED` or `FINISHED`
 
@@ -108,7 +108,7 @@
   - **Query Params:** `?season=2025`
 
 - [ ] **팀내 통계 순위 조회**
-  - `GET /api/v1/teams/{teamId}/stats/ranking`
+  - `GET /api/v1/teamsEntity/{teamId}/stats/ranking`
   - **설명:** 팀 내 선수들의 부문별(타율, 홈런 등) 순위를 조회합니다.
   - **Query Params:** `?category=battingAverage`
 

@@ -2,7 +2,7 @@ package io.github.ruifoot.infrastructure.persistence.repository.impl;
 
 import io.github.ruifoot.domain.model.user.UserPositions;
 import io.github.ruifoot.domain.repository.UserPositionRepository;
-import io.github.ruifoot.infrastructure.persistence.entity.user.UserPosition;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserPositionEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserPositionMapper;
 import io.github.ruifoot.infrastructure.persistence.repository.jpa.PositionsJpaRepository;
 import io.github.ruifoot.infrastructure.persistence.repository.jpa.UserBaseballJpaRepository;
@@ -41,7 +41,7 @@ public class UserPositionRepositoryImpl implements UserPositionRepository {
 
     @Override
     public UserPositions save(UserPositions userPosition) {
-        UserPosition entity = userPositionMapper.toEntity(userPosition);
+        UserPositionEntity entity = userPositionMapper.toEntity(userPosition);
 
         // If this is a new position with a userBaseballId, set the UserBaseball reference
         if (entity.getId() == null && userPosition.getUserBaseballId() > 0) {
@@ -55,7 +55,7 @@ public class UserPositionRepositoryImpl implements UserPositionRepository {
                     .ifPresent(entity::setPositions);
         }
 
-        UserPosition savedEntity = userPositionJpaRepository.save(entity);
+        UserPositionEntity savedEntity = userPositionJpaRepository.save(entity);
         return userPositionMapper.toDomain(savedEntity);
     }
 }

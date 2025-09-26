@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
 import io.github.ruifoot.domain.model.baseball.TeamHistory;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistoryEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between TeamHistory entity and TeamHistory domain model.
  */
 @Component
-public class TeamHistoryMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory, TeamHistory> {
+public class TeamHistoryMapper implements EntityMapper<TeamHistoryEntity, TeamHistory> {
 
     @Override
-    public TeamHistory toDomain(io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory entity) {
+    public TeamHistory toDomain(TeamHistoryEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -29,12 +30,12 @@ public class TeamHistoryMapper implements EntityMapper<io.github.ruifoot.infrast
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory toEntity(TeamHistory domain) {
+    public TeamHistoryEntity toEntity(TeamHistory domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory entity = new io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory();
+        TeamHistoryEntity entity = new TeamHistoryEntity();
 
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -49,8 +50,8 @@ public class TeamHistoryMapper implements EntityMapper<io.github.ruifoot.infrast
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamHistory entity, TeamHistory domain) {
+    public TeamHistoryEntity updateEntityFromDomain(
+            TeamHistoryEntity entity, TeamHistory domain) {
         if (entity == null || domain == null) {
             return entity;
         }

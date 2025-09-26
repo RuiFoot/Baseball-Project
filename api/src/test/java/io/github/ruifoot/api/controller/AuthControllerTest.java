@@ -1,12 +1,10 @@
 package io.github.ruifoot.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.ruifoot.api.dto.auth.request.LoginRequest;
-import io.github.ruifoot.api.dto.auth.request.RefreshTokenRequest;
-import io.github.ruifoot.api.dto.auth.request.RegisterRequest;
-import io.github.ruifoot.api.mapper.RegisterMapper;
+import io.github.ruifoot.common.dto.auth.request.LoginDto;
+import io.github.ruifoot.common.dto.auth.request.RefreshTokenDto;
+import io.github.ruifoot.common.dto.auth.request.RegisterDto;
 import io.github.ruifoot.api.test.BaseTest;
-import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
@@ -55,7 +53,7 @@ public class AuthControllerTest extends BaseTest {
         // 준비
         String email = "testuser@example.com";
         String password = "password123";
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        LoginDto loginDto = new LoginDto(email, password);
 
         JwtToken jwtToken = JwtToken.builder()
                 .grantType("Bearer")
@@ -69,7 +67,7 @@ public class AuthControllerTest extends BaseTest {
         // 실행 & 검증
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
+                        .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isOk());
 
         log.info("[DEBUG_LOG] /auth/login 엔드포인트 테스트 통과");
@@ -80,7 +78,7 @@ public class AuthControllerTest extends BaseTest {
         // 준비
         String email = "testuser@example.com";
         String password = "wrongpassword";
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        LoginDto loginDto = new LoginDto(email, password);
 
         log.info("[DEBUG_LOG] 유효하지 않은 자격 증명으로 /auth/login 엔드포인트 테스트 중");
         when(authService.login(email, password)).thenThrow(new RuntimeException("Invalid username or password"));
@@ -88,7 +86,7 @@ public class AuthControllerTest extends BaseTest {
         // 실행 & 검증
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
+                .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isBadRequest());
 
         log.info("[DEBUG_LOG] 유효하지 않은 자격 증명으로 /auth/login 엔드포인트 테스트 통과");
@@ -100,23 +98,21 @@ public class AuthControllerTest extends BaseTest {
         String username = "newuser";
         String email = "newuser@example.com";
         String password = "password123";
-        RegisterRequest registerRequest = new RegisterRequest(username, password, email, null, null, null);
+        RegisterDto registerDto = new RegisterDto(username, password, email, null, null, null);
 
         Users user = new Users();
         user.setId(1L);
         user.setUsername(username);
         user.setEmail(email);
 
-        // Convert API RegisterRequest to Core RegisterDto
-        RegisterDto coreDto = RegisterMapper.toCore(registerRequest);
 
         log.info("[DEBUG_LOG] 유효한 데이터로 /auth/signup 엔드포인트 테스트 중");
-        when(authService.register(coreDto)).thenReturn(user);
+        when(authService.register(registerDto)).thenReturn(user);
 
         // 실행 & 검증
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
+                .content(objectMapper.writeValueAsString(registerDto)))
                 .andExpect(status().isCreated());
 
         log.info("[DEBUG_LOG] /auth/signup 엔드포인트 테스트 통과");
@@ -128,18 +124,15 @@ public class AuthControllerTest extends BaseTest {
         String username = "existinguser";
         String email = "newuser@example.com";
         String password = "password123";
-        RegisterRequest registerRequest = new RegisterRequest(username, password, email, null, null, null);
-
-        // Convert API RegisterRequest to Core RegisterDto
-        RegisterDto coreDto = RegisterMapper.toCore(registerRequest);
+        RegisterDto registerDto = new RegisterDto(username, password, email, null, null, null);
 
         log.info("[DEBUG_LOG] 이미 존재하는 사용자 이름으로 /auth/signup 엔드포인트 테스트 중");
-        when(authService.register(coreDto)).thenThrow(new RuntimeException("Username already exists"));
+        when(authService.register(registerDto)).thenThrow(new RuntimeException("Username already exists"));
 
         // 실행 & 검증
         mockMvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
+                .content(objectMapper.writeValueAsString(registerDto)))
                 .andExpect(status().isConflict());
 
 
@@ -150,7 +143,7 @@ public class AuthControllerTest extends BaseTest {
     void refresh_ReturnsNewToken_WhenRefreshTokenIsValid() throws Exception {
         // 준비
         String refreshToken = "valid-refresh-token";
-        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+        RefreshTokenDto refreshTokenDto = new RefreshTokenDto(refreshToken);
 
         JwtToken newToken = JwtToken.builder()
                 .grantType("Bearer")
@@ -164,7 +157,7 @@ public class AuthControllerTest extends BaseTest {
         // 실행 & 검증
         mockMvc.perform(post("/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+                .content(objectMapper.writeValueAsString(refreshTokenDto)))
                 .andExpect(status().isOk());
 
         log.info("[DEBUG_LOG] /auth/refresh 엔드포인트 테스트 통과");
@@ -174,7 +167,7 @@ public class AuthControllerTest extends BaseTest {
     void refresh_ReturnsFail_WhenRefreshTokenIsInvalid() throws Exception {
         // 준비
         String refreshToken = "invalid-refresh-token";
-        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+        RefreshTokenDto refreshTokenDto = new RefreshTokenDto(refreshToken);
 
         log.info("[DEBUG_LOG] 유효하지 않은 리프레시 토큰으로 /auth/refresh 엔드포인트 테스트 중");
         when(authService.refreshToken(refreshToken)).thenThrow(new RuntimeException("Invalid refresh token"));
@@ -182,7 +175,7 @@ public class AuthControllerTest extends BaseTest {
         // 실행 & 검증
         mockMvc.perform(post("/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+                .content(objectMapper.writeValueAsString(refreshTokenDto)))
                 .andExpect(status().isUnauthorized());
 
         log.info("[DEBUG_LOG] 유효하지 않은 리프레시 토큰으로 /auth/refresh 엔드포인트 테스트 통과");
@@ -192,7 +185,7 @@ public class AuthControllerTest extends BaseTest {
     void logout_ReturnsSuccess() throws Exception {
         // 준비
         String refreshToken = "valid-refresh-token";
-        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+        RefreshTokenDto request = new RefreshTokenDto(refreshToken);
         log.info("[DEBUG_LOG] /auth/logout 엔드포인트 테스트 중");
 
         // 실행 & 검증
@@ -208,7 +201,7 @@ public class AuthControllerTest extends BaseTest {
     void logout_ReturnsFail_WhenTokenIsInvalid() throws Exception {
         // 준비
         String refreshToken = "invalid-refresh-token";
-        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+        RefreshTokenDto request = new RefreshTokenDto(refreshToken);
         log.info("[DEBUG_LOG] 유효하지 않은 토큰으로 /auth/logout 엔드포인트 테스트 중");
 
         when(authService.logout(refreshToken)).thenThrow(new RuntimeException("Invalid token"));

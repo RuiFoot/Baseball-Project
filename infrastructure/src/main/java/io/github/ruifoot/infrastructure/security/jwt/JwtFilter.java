@@ -1,13 +1,19 @@
 package io.github.ruifoot.infrastructure.security.jwt;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.ruifoot.common.exception.CustomException;
+import io.github.ruifoot.common.response.ResponseCode;
+import io.github.ruifoot.common.dto.common.ResponseDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,14 +32,32 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = resolveToken((HttpServletRequest) servletRequest);
 
-        // 2. validateToken으로 토큰 유효성 검사
-        if (token != null && tokenValidator.validateToken(token)) {
-            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
-            Authentication authentication = tokenValidator.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            // 2. validateToken으로 토큰 유효성 검사
+            if (token != null && tokenValidator.validateToken(token)) {
+                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
+                Authentication authentication = tokenValidator.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (CustomException e) {
+            handleCustomException((HttpServletResponse) servletResponse, e);
+            return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
+
+    private void handleCustomException(HttpServletResponse response, CustomException e) throws IOException {
+        ResponseCode responseCode = e.getCode();
+        ResponseDto<Void> responseDto = ResponseDto.of(responseCode);
+
+        response.setStatus(responseCode.getStatus());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), responseDto);
+    }
+
     // Request Header에서 토큰 정보 추출
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

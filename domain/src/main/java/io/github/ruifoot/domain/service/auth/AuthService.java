@@ -1,8 +1,8 @@
 package io.github.ruifoot.domain.service.auth;
 
-import io.github.ruifoot.domain.dto.auth.request.AdminApprovalDto;
-import io.github.ruifoot.domain.dto.auth.request.AdminRegisterDto;
-import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
+import io.github.ruifoot.common.dto.auth.request.AdminApprovalDto;
+import io.github.ruifoot.common.dto.auth.request.AdminRegisterDto;
+import io.github.ruifoot.common.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.Users;
 

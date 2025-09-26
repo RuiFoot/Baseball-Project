@@ -3,7 +3,7 @@ package io.github.ruifoot.infrastructure.security.jwt;
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.domain.model.auth.JwtToken;
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
@@ -51,11 +51,11 @@ public class JwtTokenProvider {
             authorities = "USER";
         }
 
-        Users users = (Users) authentication.getPrincipal();
+        UsersEntity usersEntity = (UsersEntity) authentication.getPrincipal();
 
 
         // Generate access token
-        String accessToken = createAccessToken(users, authentication, authorities);
+        String accessToken = createAccessToken(usersEntity, authentication, authorities);
 
         // Generate refresh token
         String refreshToken = createRefreshToken();
@@ -67,14 +67,14 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public String createAccessToken(Users users, Authentication authentication, String authorities) {
+    public String createAccessToken(UsersEntity usersEntity, Authentication authentication, String authorities) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + accessTokenValidityInMs);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("authorities",  authorities)
-                .claim("userId", users.getId())
+                .claim("userId", usersEntity.getId())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -1,18 +1,17 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
+import io.github.ruifoot.common.dto.notice.response.NoticeResponseDto;
 import io.github.ruifoot.domain.model.notice.Notice;
+import io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.stream.Collectors;
 
 /**
  * Mapper for converting between Notice entity and Notice domain model.
  */
 @Component
-public class NoticeMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.notice.Notice, Notice> {
+public class NoticeMapper implements EntityMapper<NoticeEntity, Notice> {
 
     private final UserMapper userMapper;
     private final TagMapper tagMapper;
@@ -23,7 +22,7 @@ public class NoticeMapper implements EntityMapper<io.github.ruifoot.infrastructu
     }
 
     @Override
-    public Notice toDomain(io.github.ruifoot.infrastructure.persistence.entity.notice.Notice entity) {
+    public Notice toDomain(NoticeEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -41,22 +40,20 @@ public class NoticeMapper implements EntityMapper<io.github.ruifoot.infrastructu
             domain.setAuthor(userMapper.toDomain(entity.getAuthor()));
         }
         
-        if (entity.getTags() != null) {
-            domain.setTags(entity.getTags().stream()
-                    .map(tagMapper::toDomain)
-                    .collect(Collectors.toSet()));
+        if (entity.getTagsEntity() != null) {
+            domain.setTag(tagMapper.toDomain(entity.getTagsEntity()));
         }
 
         return domain;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Notice toEntity(Notice domain) {
+    public NoticeEntity toEntity(Notice domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.notice.Notice entity = new io.github.ruifoot.infrastructure.persistence.entity.notice.Notice();
+        NoticeEntity entity = new NoticeEntity();
         
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -71,20 +68,16 @@ public class NoticeMapper implements EntityMapper<io.github.ruifoot.infrastructu
             entity.setAuthor(userMapper.toEntity(domain.getAuthor()));
         }
         
-        if (domain.getTags() != null) {
-            entity.setTags(domain.getTags().stream()
-                    .map(tagMapper::toEntity)
-                    .collect(Collectors.toSet()));
-        } else {
-            entity.setTags(new HashSet<>());
+        if (domain.getTag() != null) {
+            entity.setTagsEntity(tagMapper.toEntity(domain.getTag()));
         }
 
         return entity;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Notice updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.notice.Notice entity, Notice domain) {
+    public NoticeEntity updateEntityFromDomain(
+            NoticeEntity entity, Notice domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -99,12 +92,28 @@ public class NoticeMapper implements EntityMapper<io.github.ruifoot.infrastructu
             entity.setAuthor(userMapper.toEntity(domain.getAuthor()));
         }
         
-        if (domain.getTags() != null) {
-            entity.setTags(domain.getTags().stream()
-                    .map(tagMapper::toEntity)
-                    .collect(Collectors.toSet()));
+        if (domain.getTag() != null) {
+            entity.setTagsEntity(tagMapper.toEntity(domain.getTag()));
         }
 
         return entity;
+    }
+
+    public NoticeResponseDto toResponseDto(NoticeEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new NoticeResponseDto(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getViewCount(),
+                entity.isPinned(),
+                entity.getAuthor() != null ? entity.getAuthor().getUsername() : null,
+                entity.getTagsEntity() != null ? entity.getTagsEntity().getName() : null,
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
     }
 }

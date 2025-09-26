@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
 import io.github.ruifoot.domain.model.notice.Attachment;
+import io.github.ruifoot.infrastructure.persistence.entity.notice.AttachmentEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between Attachment entity and Attachment domain model.
  */
 @Component
-public class AttachmentMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment, Attachment> {
+public class AttachmentMapper implements EntityMapper<AttachmentEntity, Attachment> {
 
     private final NoticeMapper noticeMapper;
 
@@ -17,7 +18,7 @@ public class AttachmentMapper implements EntityMapper<io.github.ruifoot.infrastr
     }
 
     @Override
-    public Attachment toDomain(io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment entity) {
+    public Attachment toDomain(AttachmentEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -29,20 +30,20 @@ public class AttachmentMapper implements EntityMapper<io.github.ruifoot.infrastr
         domain.setCreatedAt(entity.getCreatedAt());
         domain.setUpdatedAt(entity.getUpdatedAt());
         
-        if (entity.getNotice() != null) {
-            domain.setNotice(noticeMapper.toDomain(entity.getNotice()));
+        if (entity.getNoticeEntity() != null) {
+            domain.setNotice(noticeMapper.toDomain(entity.getNoticeEntity()));
         }
 
         return domain;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment toEntity(Attachment domain) {
+    public AttachmentEntity toEntity(Attachment domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment entity = new io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment();
+        AttachmentEntity entity = new AttachmentEntity();
         
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -52,15 +53,15 @@ public class AttachmentMapper implements EntityMapper<io.github.ruifoot.infrastr
         entity.setFileUrl(domain.getFileUrl());
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
 
         return entity;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.notice.Attachment entity, Attachment domain) {
+    public AttachmentEntity updateEntityFromDomain(
+            AttachmentEntity entity, Attachment domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -70,7 +71,7 @@ public class AttachmentMapper implements EntityMapper<io.github.ruifoot.infrastr
         entity.setFileUrl(domain.getFileUrl());
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
 
         return entity;

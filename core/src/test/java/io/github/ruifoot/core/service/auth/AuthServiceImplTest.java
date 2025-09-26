@@ -1,9 +1,9 @@
 package io.github.ruifoot.core.service.auth;
 
+import io.github.ruifoot.common.dto.auth.request.RegisterDto;
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.core.CoreTestApplication;
-import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.core.test.BaseTest;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.model.auth.JwtToken;

@@ -4,12 +4,12 @@ import io.github.ruifoot.domain.model.BaseTimeDomain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Tag extends BaseTimeDomain {
     private Long id;
     private String name;
-    private Set<Notice> notices;
+    private List<Notice> notices;
 }

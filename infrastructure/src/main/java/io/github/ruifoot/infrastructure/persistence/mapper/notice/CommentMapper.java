@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
 import io.github.ruifoot.domain.model.notice.Comment;
+import io.github.ruifoot.infrastructure.persistence.entity.notice.CommentEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between Comment entity and Comment domain model.
  */
 @Component
-public class CommentMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.notice.Comment, Comment> {
+public class CommentMapper implements EntityMapper<CommentEntity, Comment> {
 
     private final NoticeMapper noticeMapper;
     private final UserMapper userMapper;
@@ -20,7 +21,7 @@ public class CommentMapper implements EntityMapper<io.github.ruifoot.infrastruct
     }
 
     @Override
-    public Comment toDomain(io.github.ruifoot.infrastructure.persistence.entity.notice.Comment entity) {
+    public Comment toDomain(CommentEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -35,20 +36,20 @@ public class CommentMapper implements EntityMapper<io.github.ruifoot.infrastruct
             domain.setAuthor(userMapper.toDomain(entity.getAuthor()));
         }
         
-        if (entity.getNotice() != null) {
-            domain.setNotice(noticeMapper.toDomain(entity.getNotice()));
+        if (entity.getNoticeEntity() != null) {
+            domain.setNotice(noticeMapper.toDomain(entity.getNoticeEntity()));
         }
 
         return domain;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Comment toEntity(Comment domain) {
+    public CommentEntity toEntity(Comment domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.notice.Comment entity = new io.github.ruifoot.infrastructure.persistence.entity.notice.Comment();
+        CommentEntity entity = new CommentEntity();
         
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -61,15 +62,15 @@ public class CommentMapper implements EntityMapper<io.github.ruifoot.infrastruct
         }
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
 
         return entity;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.Comment updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.notice.Comment entity, Comment domain) {
+    public CommentEntity updateEntityFromDomain(
+            CommentEntity entity, Comment domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -82,7 +83,7 @@ public class CommentMapper implements EntityMapper<io.github.ruifoot.infrastruct
         }
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
 
         return entity;

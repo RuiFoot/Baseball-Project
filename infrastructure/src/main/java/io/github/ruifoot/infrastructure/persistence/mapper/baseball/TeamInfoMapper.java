@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
 import io.github.ruifoot.domain.model.baseball.TeamInfo;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfoEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between TeamInfo entity and TeamInfo domain model.
  */
 @Component
-public class TeamInfoMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo, TeamInfo> {
+public class TeamInfoMapper implements EntityMapper<TeamInfoEntity, TeamInfo> {
 
     @Override
-    public TeamInfo toDomain(io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo entity) {
+    public TeamInfo toDomain(TeamInfoEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -36,12 +37,12 @@ public class TeamInfoMapper implements EntityMapper<io.github.ruifoot.infrastruc
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo toEntity(TeamInfo domain) {
+    public TeamInfoEntity toEntity(TeamInfo domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo entity = new io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo();
+        TeamInfoEntity entity = new TeamInfoEntity();
 
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -63,8 +64,8 @@ public class TeamInfoMapper implements EntityMapper<io.github.ruifoot.infrastruc
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamInfo entity, TeamInfo domain) {
+    public TeamInfoEntity updateEntityFromDomain(
+            TeamInfoEntity entity, TeamInfo domain) {
         if (entity == null || domain == null) {
             return entity;
         }

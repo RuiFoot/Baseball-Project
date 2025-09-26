@@ -1,8 +1,8 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
 import io.github.ruifoot.domain.model.user.UserProfiles;
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
-import io.github.ruifoot.infrastructure.persistence.entity.user.UserProfile;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserProfileEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +13,10 @@ import java.sql.Date;
  * Mapper for converting between UserProfile entity and UserProfiles domain model.
  */
 @Component
-public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles> {
+public class UserProfileMapper implements EntityMapper<UserProfileEntity, UserProfiles> {
 
     @Override
-    public UserProfiles toDomain(UserProfile entity) {
+    public UserProfiles toDomain(UserProfileEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -25,8 +25,8 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         domain.setId(entity.getId() != null ? entity.getId() : 0);
         
         // Map User entity to userId
-        if (entity.getUsers() != null && entity.getUsers().getId() != null) {
-            domain.setUserId(entity.getUsers().getId());
+        if (entity.getUser() != null && entity.getUser().getId() != null) {
+            domain.setUserId(entity.getUser().getId());
         }
         
         domain.setFullName(entity.getFullName());
@@ -45,12 +45,12 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
     }
 
     @Override
-    public UserProfile toEntity(UserProfiles domain) {
+    public UserProfileEntity toEntity(UserProfiles domain) {
         if (domain == null) {
             return null;
         }
 
-        UserProfile entity = new UserProfile();
+        UserProfileEntity entity = new UserProfileEntity();
         
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -60,9 +60,9 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         // For User reference, we only set the ID
         // The actual User object should be loaded by the repository
         if (domain.getUserId() > 0) {
-            Users users = new Users();
-            users.setId((int) domain.getUserId());
-            entity.setUsers(users);
+            UsersEntity usersEntity = new UsersEntity();
+            usersEntity.setId((int) domain.getUserId());
+            entity.setUser(usersEntity);
         }
         
         entity.setFullName(domain.getFullName());
@@ -81,7 +81,7 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
     }
 
     @Override
-    public UserProfile updateEntityFromDomain(UserProfile entity, UserProfiles domain) {
+    public UserProfileEntity updateEntityFromDomain(UserProfileEntity entity, UserProfiles domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -90,10 +90,10 @@ public class UserProfileMapper implements EntityMapper<UserProfile, UserProfiles
         
         // For User reference, we only update if the userId has changed
         if (domain.getUserId() > 0 && 
-            (entity.getUsers() == null || entity.getUsers().getId() != domain.getUserId())) {
-            Users users = new Users();
-            users.setId((int) domain.getUserId());
-            entity.setUsers(users);
+            (entity.getUser() == null || entity.getUser().getId() != domain.getUserId())) {
+            UsersEntity usersEntity = new UsersEntity();
+            usersEntity.setId((int) domain.getUserId());
+            entity.setUser(usersEntity);
         }
         
         entity.setFullName(domain.getFullName());

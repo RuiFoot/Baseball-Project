@@ -2,7 +2,7 @@ package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
 import io.github.ruifoot.domain.model.baseball.enums.PositionCategory;
 import io.github.ruifoot.domain.model.baseball.enums.PositionCode;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Positions;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.PositionsEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between Position entity and Positions domain model.
  */
 @Component
-public class PositionsMapper implements EntityMapper<Positions, io.github.ruifoot.domain.model.baseball.Positions> {
+public class PositionsMapper implements EntityMapper<PositionsEntity, io.github.ruifoot.domain.model.baseball.Positions> {
 
     @Override
-    public io.github.ruifoot.domain.model.baseball.Positions toDomain(Positions entity) {
+    public io.github.ruifoot.domain.model.baseball.Positions toDomain(PositionsEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -38,12 +38,12 @@ public class PositionsMapper implements EntityMapper<Positions, io.github.ruifoo
     }
 
     @Override
-    public Positions toEntity(io.github.ruifoot.domain.model.baseball.Positions domain) {
+    public PositionsEntity toEntity(io.github.ruifoot.domain.model.baseball.Positions domain) {
         if (domain == null) {
             return null;
         }
 
-        Positions entity = new Positions();
+        PositionsEntity entity = new PositionsEntity();
 
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -67,7 +67,7 @@ public class PositionsMapper implements EntityMapper<Positions, io.github.ruifoo
     }
 
     @Override
-    public Positions updateEntityFromDomain(Positions entity, io.github.ruifoot.domain.model.baseball.Positions domain) {
+    public PositionsEntity updateEntityFromDomain(PositionsEntity entity, io.github.ruifoot.domain.model.baseball.Positions domain) {
         if (entity == null || domain == null) {
             return entity;
         }

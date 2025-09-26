@@ -5,7 +5,7 @@ import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.repository.UserRepository;
 import io.github.ruifoot.infrastructure.cache.redis.RedisService;
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class JwtService {
                 .orElseThrow(() ->new CustomException(ResponseCode.USER_NOT_FOUND, ResponseCode.USER_NOT_FOUND.getMessage()));
 
         // 5. 사용자 정보를 Authentication 객체로 변환
-        Users userEntity = userMapper.toEntity(users);
+        UsersEntity userEntity = userMapper.toEntity(users);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userEntity, null, userEntity.getAuthorities());
 
         redisService.deleteValues(refreshToken);

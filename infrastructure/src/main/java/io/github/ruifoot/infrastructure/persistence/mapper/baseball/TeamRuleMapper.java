@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.baseball;
 
 import io.github.ruifoot.domain.model.baseball.TeamRule;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRuleEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +9,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between TeamRule entity and TeamRule domain model.
  */
 @Component
-public class TeamRuleMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule, TeamRule> {
+public class TeamRuleMapper implements EntityMapper<TeamRuleEntity, TeamRule> {
 
     @Override
-    public TeamRule toDomain(io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule entity) {
+    public TeamRule toDomain(TeamRuleEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -28,12 +29,12 @@ public class TeamRuleMapper implements EntityMapper<io.github.ruifoot.infrastruc
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule toEntity(TeamRule domain) {
+    public TeamRuleEntity toEntity(TeamRule domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule entity = new io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule();
+        TeamRuleEntity entity = new TeamRuleEntity();
 
         if (domain.getId() != null) {
             entity.setId(domain.getId());
@@ -47,8 +48,8 @@ public class TeamRuleMapper implements EntityMapper<io.github.ruifoot.infrastruc
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamRule entity, TeamRule domain) {
+    public TeamRuleEntity updateEntityFromDomain(
+            TeamRuleEntity entity, TeamRule domain) {
         if (entity == null || domain == null) {
             return entity;
         }

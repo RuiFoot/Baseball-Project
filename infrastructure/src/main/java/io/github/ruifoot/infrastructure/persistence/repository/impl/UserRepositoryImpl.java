@@ -3,12 +3,14 @@ package io.github.ruifoot.infrastructure.persistence.repository.impl;
 import io.github.ruifoot.domain.model.user.UserBaseball;
 import io.github.ruifoot.domain.model.user.UserPositions;
 import io.github.ruifoot.domain.model.user.UserProfiles;
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.repository.UserRepository;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Positions;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Teams;
-import io.github.ruifoot.infrastructure.persistence.entity.user.UserPosition;
-import io.github.ruifoot.infrastructure.persistence.entity.user.UserProfile;
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.PositionsEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamsEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseballEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserPositionEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserProfileEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import io.github.ruifoot.infrastructure.persistence.repository.jpa.TeamJpaRepository;
 import io.github.ruifoot.infrastructure.persistence.repository.jpa.UserJpaRepository;
@@ -27,19 +29,19 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public Optional<io.github.ruifoot.domain.model.user.Users> findById(long id) {
+    public Optional<Users> findById(long id) {
         return userJpaRepository.findById((int) id)
                 .map(userMapper::toDomain);
     }
 
     @Override
-    public Optional<io.github.ruifoot.domain.model.user.Users> findByUsername(String username) {
+    public Optional<Users> findByUsername(String username) {
         return userJpaRepository.findByUsername(username)
                 .map(userMapper::toDomain);
     }
 
     @Override
-    public Optional<io.github.ruifoot.domain.model.user.Users> findByEmail(String email) {
+    public Optional<Users> findByEmail(String email) {
         return userJpaRepository.findByEmail(email)
                 .map(userMapper::toDomain);
     }
@@ -55,8 +57,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public io.github.ruifoot.domain.model.user.Users save(io.github.ruifoot.domain.model.user.Users users) {
-        Users entity = userMapper.toEntity(users);
+    public Users save(Users users) {
+        UsersEntity entity = userMapper.toEntity(users);
 
         // If this is an existing user, load the existing entity to preserve relationships
         if (users.getId() > 0) {
@@ -68,24 +70,24 @@ public class UserRepositoryImpl implements UserRepository {
                 });
         }
 
-        Users savedEntity = userJpaRepository.save(entity);
+        UsersEntity savedEntity = userJpaRepository.save(entity);
         return userMapper.toDomain(savedEntity);
     }
 
     @Override
-    public io.github.ruifoot.domain.model.user.Users saveWithRelationships(
-            io.github.ruifoot.domain.model.user.Users user,
+    public Users saveWithRelationships(
+            Users user,
             UserProfiles profile,
             UserBaseball baseball,
             List<UserPositions> positions) {
 
         // Convert user domain model to entity
-        Users userEntity = userMapper.toEntity(user);
+        UsersEntity userEntity = userMapper.toEntity(user);
 
         // If profile is provided, set up the relationship
         if (profile != null) {
             // Convert profile domain model to entity
-            UserProfile profileEntity = new UserProfile();
+            UserProfileEntity profileEntity = new UserProfileEntity();
             profileEntity.setFullName(profile.getFullName());
             if (profile.getBirthDate() != null) {
                 profileEntity.setBirthDate(profile.getBirthDate().toLocalDate());
@@ -94,19 +96,19 @@ public class UserRepositoryImpl implements UserRepository {
             profileEntity.setResidence(profile.getResidence());
 
             // Set up bidirectional relationship
-            profileEntity.setUsers(userEntity);
+            profileEntity.setUser(userEntity);
             userEntity.setProfile(profileEntity);
         }
 
         // If baseball is provided, set up the relationship
         if (baseball != null) {
             // Convert baseball domain model to entity
-            io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball baseballEntity = 
-                new io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball();
+            UserBaseballEntity baseballEntity =
+                new UserBaseballEntity();
             if (baseball.getTeamId() > 0) {
-                Teams teamEntity = teamJpaRepository.findById(baseball.getTeamId())
+                TeamsEntity teamEntity = teamJpaRepository.findById(baseball.getTeamId())
                         .orElseThrow(() -> new IllegalArgumentException("팀이 존재하지 않습니다: id = " + baseball.getTeamId()));
-                baseballEntity.setTeams(teamEntity);
+                baseballEntity.setTeamsEntity(teamEntity);
             }
             if (baseball.getJerseyNo() > 0) {
                 baseballEntity.setJerseyNo((int) baseball.getJerseyNo());
@@ -115,17 +117,17 @@ public class UserRepositoryImpl implements UserRepository {
             baseballEntity.setBattingHand(baseball.getBattingHand());
 
             // Set up bidirectional relationship
-            baseballEntity.setUsers(userEntity);
+            baseballEntity.setUser(userEntity);
             userEntity.setBaseball(baseballEntity);
 
             // If positions are provided, set up the relationships
             if (positions != null && !positions.isEmpty()) {
                 for (io.github.ruifoot.domain.model.user.UserPositions position : positions) {
                     // Convert position domain model to entity
-                    UserPosition positionEntity = new UserPosition();
+                    UserPositionEntity positionEntity = new UserPositionEntity();
 
                     // Set up position reference
-                    Positions positionRefEntity = new Positions();
+                    PositionsEntity positionRefEntity = new PositionsEntity();
                     positionRefEntity.setId((int) position.getPositionId());
                     positionEntity.setPositions(positionRefEntity);
 
@@ -138,7 +140,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         // Save the user entity with all relationships
-        Users savedEntity = userJpaRepository.save(userEntity);
+        UsersEntity savedEntity = userJpaRepository.save(userEntity);
 
         // Convert the saved entity back to a domain model
         return userMapper.toDomain(savedEntity);

@@ -1,6 +1,6 @@
 package io.github.ruifoot.common.exception;
 
-import io.github.ruifoot.common.dto.ResponseDto;
+import io.github.ruifoot.common.dto.common.ResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

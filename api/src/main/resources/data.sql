@@ -15,7 +15,18 @@ INSERT INTO positions (id, name_en, name_kr, category, code) VALUES
                                                                 (104, 'Hitting Coach', '타격코치', '코칭스태프', 'HC')
 ON CONFLICT (id) DO NOTHING;
 
--- teams 테이블 초기 데이터 삽입
+-- teamsEntity 테이블 초기 데이터 삽입
 INSERT INTO teams (id, name, founded_date) VALUES
     (1, 'Killer Whales', '2022-08-27')
 ON CONFLICT (id) DO NOTHING;
+
+
+-- tags 초기 데이터 삽입
+INSERT INTO tags (name) VALUES
+                            ('모임'),
+                            ('연습'),
+                            ('장비'),
+                            ('경기'),
+                            ('회비'),
+                            ('팀원')
+ON CONFLICT (name) DO NOTHING; -- 중복 저장 방지

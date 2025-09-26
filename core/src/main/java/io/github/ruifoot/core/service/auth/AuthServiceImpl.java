@@ -1,10 +1,10 @@
 package io.github.ruifoot.core.service.auth;
 
+import io.github.ruifoot.common.dto.auth.request.AdminApprovalDto;
+import io.github.ruifoot.common.dto.auth.request.AdminRegisterDto;
+import io.github.ruifoot.common.dto.auth.request.RegisterDto;
 import io.github.ruifoot.common.exception.CustomException;
 import io.github.ruifoot.common.response.ResponseCode;
-import io.github.ruifoot.domain.dto.auth.request.AdminApprovalDto;
-import io.github.ruifoot.domain.dto.auth.request.AdminRegisterDto;
-import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.UserBaseball;
 import io.github.ruifoot.domain.model.user.UserPositions;

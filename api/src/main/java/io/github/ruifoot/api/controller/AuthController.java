@@ -1,11 +1,9 @@
 package io.github.ruifoot.api.controller;
 
-import io.github.ruifoot.api.dto.auth.request.*;
-import io.github.ruifoot.api.mapper.RegisterMapper;
-import io.github.ruifoot.common.dto.ResponseDto;
+import io.github.ruifoot.common.dto.auth.request.*;
+import io.github.ruifoot.common.dto.common.ResponseDto;
 import io.github.ruifoot.common.response.ResponseCode;
 import io.github.ruifoot.common.util.ResponseUtil;
-import io.github.ruifoot.domain.dto.auth.request.RegisterDto;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
@@ -29,7 +27,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<?>> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<ResponseDto<?>> login(@RequestBody @Valid LoginDto request) {
         try {
             JwtToken jwtToken = authService.login(request.email(), request.password());
             return ResponseUtil.success(ResponseCode.LOGIN_SUCCESS, jwtToken);
@@ -46,13 +44,10 @@ public class AuthController {
      - 현재는 백엔드 스펙에 맞춰 상세 정보를 모두 받는다고 가정.
     */
     @PostMapping("/signup")
-    public ResponseEntity<ResponseDto<?>> registerUser(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<ResponseDto<?>> registerUser(@RequestBody @Valid RegisterDto request) {
         try {
-            // Convert API SignupRequest to Core SignupRequest
-            RegisterDto coreDto = RegisterMapper.toCore(request);
 
-            // Call the service with the core SignupRequest
-            Users user = authService.register(coreDto);
+            Users user = authService.register(request);
 
             return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
         } catch (RuntimeException e) {
@@ -64,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ResponseDto<?>> refresh(@RequestBody @Valid RefreshTokenRequest request) {
+    public ResponseEntity<ResponseDto<?>> refresh(@RequestBody @Valid RefreshTokenDto request) {
         try {
             JwtToken jwtToken = authService.refreshToken(request.refreshToken());
             return ResponseUtil.success(ResponseCode.SUCCESS, jwtToken);
@@ -75,7 +70,7 @@ public class AuthController {
 
     //TODO: 리프레시 토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
     @DeleteMapping("/logout")
-    public ResponseEntity<ResponseDto<?>> logout(@RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<ResponseDto<?>> logout(@RequestBody RefreshTokenDto request) {
         try {
             authService.logout(request.refreshToken());
             return ResponseUtil.success(ResponseCode.LOGOUT_SUCCESS);
@@ -101,13 +96,10 @@ public class AuthController {
      * @return Response with created admin user
      */
     @PostMapping("/admin/signup")
-    public ResponseEntity<ResponseDto<?>> registerAdmin(@RequestBody @Valid AdminRegisterRequest request) {
+    public ResponseEntity<ResponseDto<?>> registerAdmin(@RequestBody @Valid AdminRegisterDto request) {
         try {
-            // Convert API AdminRegisterRequest to Core AdminRegisterDto
-            var coreDto = RegisterMapper.toCoreAdmin(request);
-
             // Call the service with the core AdminRegisterDto
-            Users user = authService.registerAdmin(coreDto);
+            Users user = authService.registerAdmin(request);
 
             return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
         } catch (RuntimeException e) {
@@ -124,13 +116,11 @@ public class AuthController {
      * @return Response with updated user
      */
     @PutMapping("/admin/approval")
-    public ResponseEntity<ResponseDto<?>> updateAdminApproval(@RequestBody @Valid AdminApprovalRequest request) {
+    public ResponseEntity<ResponseDto<?>> updateAdminApproval(@RequestBody @Valid AdminApprovalDto request) {
         try {
-            // Convert API AdminApprovalRequest to Core AdminApprovalDto
-            var coreDto = RegisterMapper.toCoreApproval(request);
 
             // Call the service with the core AdminApprovalDto
-            Users user = authService.updateAdminApproval(coreDto);
+            Users user = authService.updateAdminApproval(request);
 
             return ResponseUtil.success(ResponseCode.SUCCESS, user);
         } catch (RuntimeException e) {

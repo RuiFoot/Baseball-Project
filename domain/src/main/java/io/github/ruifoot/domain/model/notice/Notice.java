@@ -5,7 +5,6 @@ import io.github.ruifoot.domain.model.user.Users;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,5 +15,5 @@ public class Notice extends BaseTimeDomain {
     private int viewCount;
     private boolean pinned;
     private Users author;
-    private Set<Tag> tags;
+    private Tag tag;
 }

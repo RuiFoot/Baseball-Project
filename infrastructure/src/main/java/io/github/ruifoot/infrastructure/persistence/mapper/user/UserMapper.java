@@ -1,6 +1,6 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between User entity and Users domain model.
  */
 @Component
-public class UserMapper implements EntityMapper<Users, io.github.ruifoot.domain.model.user.Users> {
+public class UserMapper implements EntityMapper<UsersEntity, io.github.ruifoot.domain.model.user.Users> {
 
     @Override
-    public io.github.ruifoot.domain.model.user.Users toDomain(Users entity) {
+    public io.github.ruifoot.domain.model.user.Users toDomain(UsersEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -30,12 +30,12 @@ public class UserMapper implements EntityMapper<Users, io.github.ruifoot.domain.
     }
 
     @Override
-    public Users toEntity(io.github.ruifoot.domain.model.user.Users domain) {
+    public UsersEntity toEntity(io.github.ruifoot.domain.model.user.Users domain) {
         if (domain == null) {
             return null;
         }
 
-        Users entity = new Users();
+        UsersEntity entity = new UsersEntity();
 
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -56,7 +56,7 @@ public class UserMapper implements EntityMapper<Users, io.github.ruifoot.domain.
     }
 
     @Override
-    public Users updateEntityFromDomain(Users entity, io.github.ruifoot.domain.model.user.Users domain) {
+    public UsersEntity updateEntityFromDomain(UsersEntity entity, io.github.ruifoot.domain.model.user.Users domain) {
         if (entity == null || domain == null) {
             return entity;
         }

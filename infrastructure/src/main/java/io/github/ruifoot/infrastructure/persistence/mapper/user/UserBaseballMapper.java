@@ -1,8 +1,9 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
 import io.github.ruifoot.domain.model.user.UserBaseball;
-import io.github.ruifoot.infrastructure.persistence.entity.baseball.Teams;
-import io.github.ruifoot.infrastructure.persistence.entity.user.Users;
+import io.github.ruifoot.infrastructure.persistence.entity.baseball.TeamsEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseballEntity;
+import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between UserBaseball entity and UserBaseball domain model.
  */
 @Component
-public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball, UserBaseball> {
+public class UserBaseballMapper implements EntityMapper<UserBaseballEntity, UserBaseball> {
 
     @Override
-    public UserBaseball toDomain(io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball entity) {
+    public UserBaseball toDomain(UserBaseballEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -22,13 +23,13 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         domain.setId(entity.getId() != null ? entity.getId() : 0);
         
         // Map User entity to userId
-        if (entity.getUsers() != null && entity.getUsers().getId() != null) {
-            domain.setUserId(entity.getUsers().getId());
+        if (entity.getUser() != null && entity.getUser().getId() != null) {
+            domain.setUserId(entity.getUser().getId());
         }
         
         // Map Team entity to teamId
-        if (entity.getTeams() != null && entity.getTeams().getId() != null) {
-            domain.setTeamId(entity.getTeams().getId());
+        if (entity.getTeamsEntity() != null && entity.getTeamsEntity().getId() != null) {
+            domain.setTeamId(entity.getTeamsEntity().getId());
         }
         
         // Convert Integer to long for jerseyNo
@@ -45,12 +46,12 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball toEntity(UserBaseball domain) {
+    public UserBaseballEntity toEntity(UserBaseball domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball entity = new io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball();
+        UserBaseballEntity entity = new UserBaseballEntity();
         
         // Don't set ID for new entities (ID is auto-generated)
         if (domain.getId() > 0) {
@@ -60,17 +61,17 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         // For User reference, we only set the ID
         // The actual User object should be loaded by the repository
         if (domain.getUserId() > 0) {
-            Users users = new Users();
-            users.setId((int) domain.getUserId());
-            entity.setUsers(users);
+            UsersEntity usersEntity = new UsersEntity();
+            usersEntity.setId((int) domain.getUserId());
+            entity.setUser(usersEntity);
         }
         
         // For Team reference, we only set the ID
         // The actual Team object should be loaded by the repository
         if (domain.getTeamId() > 0) {
-            Teams teams = new Teams();
-            teams.setId((int) domain.getTeamId());
-            entity.setTeams(teams);
+            TeamsEntity teamsEntity = new TeamsEntity();
+            teamsEntity.setId((int) domain.getTeamId());
+            entity.setTeamsEntity(teamsEntity);
         }
         
         // Convert long to Integer for jerseyNo
@@ -87,8 +88,8 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.user.UserBaseball entity, UserBaseball domain) {
+    public UserBaseballEntity updateEntityFromDomain(
+            UserBaseballEntity entity, UserBaseball domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -97,20 +98,20 @@ public class UserBaseballMapper implements EntityMapper<io.github.ruifoot.infras
         
         // For User reference, we only update if the userId has changed
         if (domain.getUserId() > 0 && 
-            (entity.getUsers() == null || entity.getUsers().getId() != domain.getUserId())) {
-            Users users = new Users();
-            users.setId((int) domain.getUserId());
-            entity.setUsers(users);
+            (entity.getUser() == null || entity.getUser().getId() != domain.getUserId())) {
+            UsersEntity usersEntity = new UsersEntity();
+            usersEntity.setId((int) domain.getUserId());
+            entity.setUser(usersEntity);
         }
         
         // For Team reference, we only update if the teamId has changed
         if (domain.getTeamId() > 0 && 
-            (entity.getTeams() == null || entity.getTeams().getId() != domain.getTeamId())) {
-            Teams teams = new Teams();
-            teams.setId((int) domain.getTeamId());
-            entity.setTeams(teams);
+            (entity.getTeamsEntity() == null || entity.getTeamsEntity().getId() != domain.getTeamId())) {
+            TeamsEntity teamsEntity = new TeamsEntity();
+            teamsEntity.setId((int) domain.getTeamId());
+            entity.setTeamsEntity(teamsEntity);
         } else if (domain.getTeamId() == 0) {
-            entity.setTeams(null);
+            entity.setTeamsEntity(null);
         }
         
         // Convert long to Integer for jerseyNo

@@ -1,6 +1,7 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
 import io.github.ruifoot.domain.model.notice.NoticeLike;
+import io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLikeEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import io.github.ruifoot.infrastructure.persistence.mapper.user.UserMapper;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Mapper for converting between NoticeLike entity and NoticeLike domain model.
  */
 @Component
-public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike, NoticeLike> {
+public class NoticeLikeMapper implements EntityMapper<NoticeLikeEntity, NoticeLike> {
 
     private final NoticeMapper noticeMapper;
     private final UserMapper userMapper;
@@ -20,7 +21,7 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
     }
 
     @Override
-    public NoticeLike toDomain(io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike entity) {
+    public NoticeLike toDomain(NoticeLikeEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -30,43 +31,43 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
         domain.setCreatedAt(entity.getCreatedAt());
         domain.setUpdatedAt(entity.getUpdatedAt());
         
-        if (entity.getNotice() != null) {
-            domain.setNotice(noticeMapper.toDomain(entity.getNotice()));
+        if (entity.getNoticeEntity() != null) {
+            domain.setNotice(noticeMapper.toDomain(entity.getNoticeEntity()));
         }
         
-        if (entity.getUsers() != null) {
-            domain.setUser(userMapper.toDomain(entity.getUsers()));
+        if (entity.getUsersEntity() != null) {
+            domain.setUser(userMapper.toDomain(entity.getUsersEntity()));
         }
 
         return domain;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike toEntity(NoticeLike domain) {
+    public NoticeLikeEntity toEntity(NoticeLike domain) {
         if (domain == null) {
             return null;
         }
 
-        io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike entity = new io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike();
+        NoticeLikeEntity entity = new NoticeLikeEntity();
         
         if (domain.getId() != null) {
             entity.setId(domain.getId());
         }
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
         
         if (domain.getUser() != null) {
-            entity.setUsers(userMapper.toEntity(domain.getUser()));
+            entity.setUsersEntity(userMapper.toEntity(domain.getUser()));
         }
 
         return entity;
     }
 
     @Override
-    public io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike updateEntityFromDomain(
-            io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeLike entity, NoticeLike domain) {
+    public NoticeLikeEntity updateEntityFromDomain(
+            NoticeLikeEntity entity, NoticeLike domain) {
         if (entity == null || domain == null) {
             return entity;
         }
@@ -74,11 +75,11 @@ public class NoticeLikeMapper implements EntityMapper<io.github.ruifoot.infrastr
         // Don't update ID as it's the primary key
         
         if (domain.getNotice() != null) {
-            entity.setNotice(noticeMapper.toEntity(domain.getNotice()));
+            entity.setNoticeEntity(noticeMapper.toEntity(domain.getNotice()));
         }
         
         if (domain.getUser() != null) {
-            entity.setUsers(userMapper.toEntity(domain.getUser()));
+            entity.setUsersEntity(userMapper.toEntity(domain.getUser()));
         }
 
         return entity;
