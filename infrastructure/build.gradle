@@ -16,7 +16,7 @@ dependencies {
 	implementation project(':domain')
 	implementation project(':common')
 
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	// DB, JPA, Redis 등 구현 관련 라이브러리

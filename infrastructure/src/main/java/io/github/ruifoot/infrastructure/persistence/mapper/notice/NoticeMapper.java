@@ -1,5 +1,6 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.notice;
 
+import io.github.ruifoot.common.dto.notice.response.NoticeDetailResponseDto;
 import io.github.ruifoot.common.dto.notice.response.NoticeResponseDto;
 import io.github.ruifoot.domain.model.notice.Notice;
 import io.github.ruifoot.infrastructure.persistence.entity.notice.NoticeEntity;
@@ -27,22 +28,15 @@ public class NoticeMapper implements EntityMapper<NoticeEntity, Notice> {
             return null;
         }
 
-        Notice domain = new Notice();
-        domain.setId(entity.getId());
-        domain.setTitle(entity.getTitle());
-        domain.setContent(entity.getContent());
-        domain.setViewCount(entity.getViewCount());
-        domain.setPinned(entity.isPinned());
-        domain.setCreatedAt(entity.getCreatedAt());
-        domain.setUpdatedAt(entity.getUpdatedAt());
-        
-        if (entity.getAuthor() != null) {
-            domain.setAuthor(userMapper.toDomain(entity.getAuthor()));
-        }
-        
-        if (entity.getTagsEntity() != null) {
-            domain.setTag(tagMapper.toDomain(entity.getTagsEntity()));
-        }
+        Notice domain = Notice.builder()
+                .id(null) // DB에서 생성될 수도 있음
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .viewCount(0)
+                .pinned(false)
+                .author(entity.getAuthor() != null ? userMapper.toDomain(entity.getAuthor()) : null)
+                .tag(entity.getTagsEntity() != null ? tagMapper.toDomain(entity.getTagsEntity()) : null)
+                .build();
 
         return domain;
     }
@@ -107,11 +101,32 @@ public class NoticeMapper implements EntityMapper<NoticeEntity, Notice> {
         return new NoticeResponseDto(
                 entity.getId(),
                 entity.getTitle(),
+                entity.getPreview(),
+                entity.getViewCount(),
+                entity.isPinned(),
+                entity.getAuthor() != null ? entity.getAuthor().getUsername() : null,
+                entity.getTagsEntity() != null ? entity.getTagsEntity().getName() : null,
+
+
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
+    public NoticeDetailResponseDto toDetailResponseDto(NoticeEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new NoticeDetailResponseDto(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getPreview(),
                 entity.getContent(),
                 entity.getViewCount(),
                 entity.isPinned(),
                 entity.getAuthor() != null ? entity.getAuthor().getUsername() : null,
                 entity.getTagsEntity() != null ? entity.getTagsEntity().getName() : null,
+
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

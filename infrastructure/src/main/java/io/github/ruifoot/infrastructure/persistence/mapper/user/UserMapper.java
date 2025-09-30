@@ -1,5 +1,6 @@
 package io.github.ruifoot.infrastructure.persistence.mapper.user;
 
+import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.infrastructure.persistence.entity.user.UsersEntity;
 import io.github.ruifoot.infrastructure.persistence.mapper.EntityMapper;
 import org.springframework.stereotype.Component;
@@ -11,22 +12,19 @@ import org.springframework.stereotype.Component;
 public class UserMapper implements EntityMapper<UsersEntity, io.github.ruifoot.domain.model.user.Users> {
 
     @Override
-    public io.github.ruifoot.domain.model.user.Users toDomain(UsersEntity entity) {
+    public Users toDomain(UsersEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        io.github.ruifoot.domain.model.user.Users domain = new io.github.ruifoot.domain.model.user.Users();
-        domain.setId(entity.getId() != null ? entity.getId() : 0);
-        domain.setUsername(entity.getUsername());
-        domain.setEmail(entity.getEmail());
-        domain.setPasswordHash(entity.getPasswordHash());
-        domain.setRole(entity.getRole());
-        domain.setCreatedAt(entity.getCreatedAt());
-        domain.setUpdatedAt(entity.getUpdatedAt());
-        domain.setAdminApproved(entity.isEnabled());
-
-        return domain;
+        return Users.builder()
+                .id(entity.getId() != null ? entity.getId() : 0)
+                .username(entity.getUsername())
+                .email(entity.getEmail())
+                .passwordHash(entity.getPasswordHash())
+                .role(entity.getRole())
+                .adminApproved(entity.isEnabled())
+                .build();
     }
 
     @Override

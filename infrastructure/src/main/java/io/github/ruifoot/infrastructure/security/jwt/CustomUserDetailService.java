@@ -26,4 +26,10 @@ public class CustomUserDetailService implements UserDetailsService {
     private UserDetails createUserDetails(Optional<Users> users) {
         return userMapper.toEntity(users.orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
+
+    public Users getUserByUsername(String username) {
+        return userRepository.findByUsername(username) // username 대신 원하는 필드 가능
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
+
 }

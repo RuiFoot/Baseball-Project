@@ -18,16 +18,13 @@ public class TagMapper implements EntityMapper<TagsEntity, Tag> {
             return null;
         }
 
-        Tag domain = new Tag();
-        domain.setId(entity.getId());
-        domain.setName(entity.getName());
-        domain.setCreatedAt(entity.getCreatedAt());
-        domain.setUpdatedAt(entity.getUpdatedAt());
-
         // We don't map notices to avoid circular references
         // This will be handled by the NoticeMapper
 
-        return domain;
+        return Tag.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .build();
     }
 
     @Override

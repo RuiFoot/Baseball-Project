@@ -1,15 +1,12 @@
 package io.github.ruifoot.domain.model.notice;
 
-import io.github.ruifoot.domain.model.BaseTimeDomain;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class Tag extends BaseTimeDomain {
+@Builder
+public class Tag{
     private Long id;
     private String name;
-    private List<Notice> notices;
+    // private List<Notice> notices;
 }

@@ -2,11 +2,13 @@ package io.github.ruifoot.domain.model.user;
 
 
 import io.github.ruifoot.domain.model.BaseTimeDomain;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
 public class Users extends BaseTimeDomain {
 
   private long id;

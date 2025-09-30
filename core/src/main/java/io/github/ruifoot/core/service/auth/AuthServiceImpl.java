@@ -53,16 +53,14 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
-        // Create new user
-        Users user = new Users();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(password));
-        user.setRole("USER");
-        user.setAdminApproved(false);
-
         // Save user
-        return user;
+        return Users.builder()
+                .username(username)
+                .email(email)
+                .passwordHash(passwordEncoder.encode(password))
+                .role("USER")
+                .adminApproved(false)
+                .build();
     }
 
     @Override
@@ -82,12 +80,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Create new user
-        Users user = new Users();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(password));
-        user.setRole("USER");
-        user.setAdminApproved(false);
+        Users user = Users.builder()
+                .username(username)
+                .email(email)
+                .passwordHash(passwordEncoder.encode(password))
+                .role("USER")
+                .adminApproved(false)
+                .build();
 
         // Create UserProfiles if profile data is provided
         UserProfiles userProfile = null;
@@ -201,12 +200,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Create new admin user
-        Users user = new Users();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(password));
-        user.setRole("ADMIN");
-        user.setAdminApproved(true);
+        Users user = Users.builder()
+                .username(username)
+                .email(email)
+                .passwordHash(passwordEncoder.encode(password))
+                .role("ADMIN")
+                .adminApproved(false)
+                .build();
 
         // Create UserProfiles if profile data is provided
         UserProfiles userProfile = null;
