@@ -64,9 +64,10 @@ public class AuthServiceImplTest extends BaseTest {
     void getUsername_ReturnsUsername_WhenUserExists() {
         // 준비
         long userId = 1L;
-        Users user = new Users();
-        user.setId(userId);
-        user.setUsername("testuser");
+        Users user = Users.builder()
+                .id(userId)
+                .username("testuser")
+                .build();
         log.info("[DEBUG_LOG] 사용자 ID로 getUsername 테스트 중: {}", userId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 

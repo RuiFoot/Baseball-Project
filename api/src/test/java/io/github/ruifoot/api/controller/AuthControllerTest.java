@@ -100,10 +100,11 @@ public class AuthControllerTest extends BaseTest {
         String password = "password123";
         RegisterDto registerDto = new RegisterDto(username, password, email, null, null, null);
 
-        Users user = new Users();
-        user.setId(1L);
-        user.setUsername(username);
-        user.setEmail(email);
+        Users user = Users.builder()
+                .id(1L)
+                .username(username)
+                .email(email)
+                .build();
 
 
         log.info("[DEBUG_LOG] 유효한 데이터로 /auth/signup 엔드포인트 테스트 중");
