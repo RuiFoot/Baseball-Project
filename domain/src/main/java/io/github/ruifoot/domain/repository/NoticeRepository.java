@@ -23,4 +23,8 @@ public interface NoticeRepository {
 
     NoticeDetailResponseDto save(NoticeRequestDto noticeRequestDto, UserDetails user);
 
+    NoticeRequestDto update(Long noticeId, NoticeRequestDto noticeRequestDto, UserDetails user);
+
+    void delete(Long noticeId, UserDetails user);
+
 }

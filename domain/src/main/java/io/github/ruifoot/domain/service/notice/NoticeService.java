@@ -19,4 +19,8 @@ public interface NoticeService {
     NoticeDetailResponseDto findNoticeDetail(Long noticeId);
 
     NoticeDetailResponseDto createNotice(NoticeRequestDto noticeRequestDto, UserDetails user);
+
+    NoticeRequestDto updateNotice(Long noticeId, NoticeRequestDto noticeRequestDto, UserDetails user);
+
+    void deleteNotice(Long noticeId, UserDetails user);
 }

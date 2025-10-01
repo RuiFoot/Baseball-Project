@@ -69,6 +69,14 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
     @Override
     public NoticeDetailResponseDto findNoticeDetail(Long noticeId) {
+
+        int updatedCount = noticeJpaRepository.incrementViewCount(noticeId);
+
+        // 2. 업데이트 실패 시 예외 처리 (공지 없음 or 권한 없음)
+        if (updatedCount == 0) {
+            throw new EntityNotFoundException("공지사항이 존재하지 않거나 수정 권한이 없습니다.");
+        }
+
         return noticeJpaRepository.findById(noticeId)
                 .map(noticeMapper::toDetailResponseDto)
                 .orElseThrow(() -> new EntityNotFoundException("공지사항이 존재하지 않습니다."));
@@ -91,6 +99,35 @@ public class NoticeRepositoryImpl implements NoticeRepository {
                 .build();
 
         return noticeMapper.toDetailResponseDto(noticeJpaRepository.save(entity));
+    }
+
+    @Override
+    public NoticeRequestDto update(Long noticeId, NoticeRequestDto noticeRequestDto, UserDetails user) {
+        // 1. JPQL update 실행
+        int updatedCount = noticeJpaRepository.updateNotice(
+                noticeId,
+                noticeRequestDto.title(),
+                noticeRequestDto.preview(),
+                noticeRequestDto.content(),
+                noticeRequestDto.tagId(),
+                user.getUsername()
+        );
+
+        // 2. 업데이트 실패 시 예외 처리 (공지 없음 or 권한 없음)
+        if (updatedCount == 0) {
+            throw new EntityNotFoundException("공지사항이 존재하지 않거나 수정 권한이 없습니다.");
+        }
+
+        return noticeRequestDto;
+    }
+
+    @Override
+    public void delete(Long noticeId, UserDetails user) {
+        int deletedCount = noticeJpaRepository.deleteByIdAndAuthorUsername(noticeId, user.getUsername());
+
+        if (deletedCount == 0) {
+            throw new EntityNotFoundException("공지사항이 존재하지 않거나 삭제 권한이 없습니다.");
+        }
     }
 
 }

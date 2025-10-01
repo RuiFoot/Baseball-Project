@@ -15,6 +15,8 @@ dependencies {
     implementation project(':infrastructure')
     implementation project(':common')
 
+
+    implementation 'org.springframework:spring-tx'
     implementation 'org.springframework.security:spring-security-crypto'
 
     // Test dependencies

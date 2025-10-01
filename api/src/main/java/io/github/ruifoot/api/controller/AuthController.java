@@ -7,25 +7,38 @@ import io.github.ruifoot.common.util.ResponseUtil;
 import io.github.ruifoot.domain.model.auth.JwtToken;
 import io.github.ruifoot.domain.model.user.Users;
 import io.github.ruifoot.domain.service.auth.AuthService;
-import io.github.ruifoot.domain.service.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 /**
  * 인증, 인가를 위한 컨트롤러
  * 로그인, 회원가입, 토큰 발급/갱신, 인증 관련 기능
  */
+@Tag(name = "Auth", description = "인증/인가 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth") // API 버전 명시
 public class AuthController {
 
-    private final UserService userService;
     private final AuthService authService;
 
+    /**
+     * 사용자의 이메일과 비밀번호로 로그인합니다.
+     *
+     * @param request 로그인 요청 정보 (이메일, 비밀번호)
+     * @return JWT 토큰 (액세스 토큰, 리프레시 토큰)
+     */
+    @Operation(summary = "로그인", description = "이메일과 비밀번호를 사용하여 로그인하고 JWT를 발급합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<?>> login(@RequestBody @Valid LoginDto request) {
         try {
@@ -36,19 +49,22 @@ public class AuthController {
         }
     }
 
-    /*
-    TODO[AuthController]: 회원가입 API 스펙 확장 필요
-     - 현재 프론트엔드에서는 간단한 정보만 받지만, 백엔드 `RegisterDto`는 상세 정보를 포함.
-     - 프론트엔드와 협의하여 회원가입 시점에 모든 정보를 받을지(추천),
-       아니면 최소 정보로 가입 후 추가 정보를 입력받을지 결정 필요.
-     - 현재는 백엔드 스펙에 맞춰 상세 정보를 모두 받는다고 가정.
-    */
+    /**
+     * 새로운 사용자를 등록합니다.
+     *
+     * @param request 회원가입 요청 정보
+     * @return 생성된 사용자 정보
+     */
+    @Operation(summary = "회원가입", description = "새로운 사용자를 시스템에 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
+    })
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<?>> registerUser(@RequestBody @Valid RegisterDto request) {
         try {
-
             Users user = authService.register(request);
-
             return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("exists")) {
@@ -58,6 +74,17 @@ public class AuthController {
         }
     }
 
+    /**
+     * 리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.
+     *
+     * @param request 리프레시 토큰 요청 정보
+     * @return 새로운 JWT 토큰
+     */
+    @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰과 리프레시 토큰을 발급합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "토큰 갱신 성공"),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰")
+    })
     @PostMapping("/refresh")
     public ResponseEntity<ResponseDto<?>> refresh(@RequestBody @Valid RefreshTokenDto request) {
         try {
@@ -68,7 +95,17 @@ public class AuthController {
         }
     }
 
-    //TODO: 리프레시 토큰으로만 대응되게, 토큰이 이상하면 로그아웃 실패 뜨게하기
+    /**
+     * 사용자를 로그아웃 처리합니다.
+     *
+     * @param request 리프레시 토큰 요청 정보
+     * @return 응답 DTO
+     */
+    @Operation(summary = "로그아웃", description = "사용자의 리프레시 토큰을 만료시켜 로그아웃 처리합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰")
+    })
     @DeleteMapping("/logout")
     public ResponseEntity<ResponseDto<?>> logout(@RequestBody RefreshTokenDto request) {
         try {
@@ -79,28 +116,21 @@ public class AuthController {
         }
     }
 
-    /*
-    TODO[AuthController]: 비밀번호 찾기/재설정 기능 필요
-     - 1. 비밀번호 재설정 요청 (이메일 인증)
-     - 2. 재설정 토큰 검증
-     - 3. 새 비밀번호로 변경
-     */
-
-    /*
-    TODO[AuthController]: 소셜 로그인 기능 추가 필요 (카카오, 구글 등)
-     */
-
     /**
      * Register a new admin user
      * @param request Admin registration request
      * @return Response with created admin user
      */
+    @Operation(summary = "관리자 회원가입", description = "새로운 관리자를 시스템에 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
+    })
     @PostMapping("/admin/signup")
     public ResponseEntity<ResponseDto<?>> registerAdmin(@RequestBody @Valid AdminRegisterDto request) {
         try {
-            // Call the service with the core AdminRegisterDto
             Users user = authService.registerAdmin(request);
-
             return ResponseUtil.success(ResponseCode.USER_CREATE_SUCCESS, user);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("exists")) {
@@ -115,13 +145,15 @@ public class AuthController {
      * @param request Admin approval request
      * @return Response with updated user
      */
+    @Operation(summary = "관리자 승인 상태 변경", description = "사용자의 관리자 승인 상태를 변경합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상태 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
     @PutMapping("/admin/approval")
     public ResponseEntity<ResponseDto<?>> updateAdminApproval(@RequestBody @Valid AdminApprovalDto request) {
         try {
-
-            // Call the service with the core AdminApprovalDto
             Users user = authService.updateAdminApproval(request);
-
             return ResponseUtil.success(ResponseCode.SUCCESS, user);
         } catch (RuntimeException e) {
             return ResponseUtil.fail(ResponseCode.INVALID_PARAMETER, e.getMessage());

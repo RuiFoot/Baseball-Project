@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,13 +34,27 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    @Transactional
     public NoticeDetailResponseDto findNoticeDetail(Long noticeId) {
         return noticeRepository.findNoticeDetail(noticeId);
     }
 
     @Override
+    @Transactional
     public NoticeDetailResponseDto createNotice(NoticeRequestDto noticeRequestDto, UserDetails user) {
 
         return noticeRepository.save(noticeRequestDto, user);
+    }
+
+    @Override
+    @Transactional
+    public NoticeRequestDto updateNotice(Long noticeId, NoticeRequestDto noticeRequestDto, UserDetails user) {
+        return noticeRepository.update(noticeId, noticeRequestDto, user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteNotice(Long noticeId, UserDetails user) {
+        noticeRepository.delete(noticeId, user);
     }
 }
